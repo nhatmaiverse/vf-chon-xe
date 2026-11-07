@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "question": "VF 3 dài bao nhiêu mét?",
+    "expected_answer": "VF 3 có chiều dài là 3.19 m.",
+    "is_trap": false,
+    "note": "Ví dụ mẫu để bạn tham khảo và điền tiếp các câu hỏi kiểm tra thông số"
+  }
+]

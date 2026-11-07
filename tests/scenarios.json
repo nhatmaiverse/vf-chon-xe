@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "description": "Vợ chồng + 2 con nhỏ, đi làm 25 km/ngày, về quê 150 km mỗi tháng, chung cư không sạc được",
+    "inputs": {
+      "passengers": "3–4",
+      "budget": null,
+      "daily_distance_km": "<30",
+      "long_trip_frequency": "hàng tháng",
+      "home_charging": false,
+      "priority": "rộng rãi"
+    },
+    "expected_cars": ["vf6", "vf7"],
+    "note": "Ví dụ mẫu để bạn tham khảo và điền tiếp các tình huống tiếp theo"
+  }
+]
