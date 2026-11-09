@@ -27,7 +27,7 @@
       "warranty": "5 năm / 130.000 km",
       "best_for": [],
       "not_ideal_for": [],
-      "image": "assets/cars/vf2.png"
+      "image": "assets/cars/vf2.webp"
     },
     {
       "id": "vf3",
@@ -46,7 +46,7 @@
       "warranty": "7 năm / 160.000 km",
       "best_for": [],
       "not_ideal_for": [],
-      "image": "assets/cars/vf3.png"
+      "image": "assets/cars/vf3.webp"
     },
     {
       "id": "vf5",
@@ -66,7 +66,7 @@
       "warranty": "7 năm / 160.000 km",
       "best_for": [],
       "not_ideal_for": [],
-      "image": "assets/cars/vf5.png"
+      "image": "assets/cars/vf5.webp"
     },
     {
       "id": "vf6",
@@ -85,7 +85,7 @@
       "warranty": "7 năm / 160.000 km",
       "best_for": [],
       "not_ideal_for": [],
-      "image": "assets/cars/vf6.png"
+      "image": "assets/cars/vf6.webp"
     },
     {
       "id": "vf7",
@@ -104,7 +104,7 @@
       "warranty": "7 năm / 160.000 km",
       "best_for": [],
       "not_ideal_for": [],
-      "image": "assets/cars/vf7.png"
+      "image": "assets/cars/vf7.webp"
     },
     {
       "id": "vf8",
@@ -123,7 +123,7 @@
       "warranty": "10 năm / 200.000 km",
       "best_for": [],
       "not_ideal_for": [],
-      "image": "assets/cars/vf8.png"
+      "image": "assets/cars/vf8.webp"
     },
     {
       "id": "vf9",
@@ -142,7 +142,7 @@
       "warranty": "10 năm / 200.000 km",
       "best_for": [],
       "not_ideal_for": [],
-      "image": "assets/cars/vf9.png"
+      "image": "assets/cars/vf9.webp"
     }
   ]
 }

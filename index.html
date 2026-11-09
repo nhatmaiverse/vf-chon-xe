@@ -4,32 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VF Chọn Xe — Trợ lý AI chọn xe điện VinFast</title>
-  <!-- Google Fonts: Mulish -->
+  <!-- Google Fonts: Mulish (700-900 cho tiêu đề) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="hero-lineup.css">
 </head>
 <body>
   <div class="app-container">
     <header class="hero">
-      <h1 class="hero-title">VF Chọn Xe</h1>
-      <p class="hero-subtitle">Trợ lý AI giúp bạn chọn đúng xe điện VinFast</p>
+      <div class="hero-header-text">
+        <h1 class="hero-title">VF Chọn Xe</h1>
+        <p class="hero-subtitle">Trả lời 6 câu hỏi – AI gợi ý mẫu xe điện VinFast hợp với bạn</p>
+      </div>
+
+      <!-- Dàn xe theo tỉ lệ thật -->
+      <div id="lineup"></div>
+
+      <p class="fleet-caption">
+        Bản này so sánh <span data-car-count>7</span> mẫu ô tô điện VinFast
+      </p>
+
+      <!-- Nút kêu gọi hành động góc vát chéo kiểu chữ V -->
+      <div class="hero-cta-wrap">
+        <a href="#quiz" id="cta-find-car" class="hero-cta-btn" role="button">
+          <span>Tìm xe hợp với tôi</span>
+          <svg class="cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </a>
+      </div>
     </header>
 
     <main class="main-content">
-      <div class="placeholder-card">
-        <p class="placeholder-status">Khung dự án đã sẵn sàng cho các bước tiếp theo.</p>
-      </div>
+      <!-- Phần khảo sát câu hỏi: để trống theo yêu cầu -->
+      <section id="quiz" class="quiz-section" aria-label="Bộ câu hỏi chọn xe"></section>
     </main>
 
     <footer class="app-footer">
       <p class="disclaimer">
-        Dự án cá nhân, phi thương mại, không phải trang chính thức của VinFast. Thông số lấy từ vinfastauto.com ngày …, vui lòng kiểm tra lại trước khi mua.
+        Dự án cá nhân, phi thương mại, không phải trang chính thức của VinFast. Bản này so sánh <span data-car-count>7</span> mẫu ô tô điện VinFast. Thông số lấy từ vinfastauto.com ngày 8/11/2026, vui lòng kiểm tra lại trước khi mua.
       </p>
     </footer>
   </div>
 
+  <!-- Thứ tự script: GSAP (CDN) → hero-lineup.js → app.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="hero-lineup.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

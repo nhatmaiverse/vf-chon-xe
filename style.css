@@ -1,17 +1,19 @@
 :root {
-  /* Màu sắc */
+  /* Bảng màu chính theo nhận diện dự án */
   --bg-0: #05070D;
   --bg-1: #0B1330;
   --blue: #1464F4;
+  --blue-light: #3D82F7;
+  --blue-glow: rgba(20, 100, 244, 0.45);
   --red: #EE3D43;
   --green: #2DBE78;
   --text: #FFFFFF;
   --text-dim: #9AA3B5;
 
-  /* Font */
-  --font: 'Mulish', sans-serif;
+  /* Font chữ Mulish */
+  --font: 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Khoảng cách */
+  /* Khoảng cách chuẩn */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 16px;
@@ -20,78 +22,173 @@
   --space-6: 64px;
 
   /* Bo góc */
+  --radius-sm: 6px;
   --radius: 12px;
 
-  /* Hiệu ứng */
+  /* Chuyển động mượt */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-* {
+/* Reset chuẩn */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
 body {
   font-family: var(--font);
+  background: radial-gradient(120% 80% at 50% 0%, var(--bg-1) 0%, var(--bg-0) 80%);
   background-color: var(--bg-0);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
+/* Khung bọc ứng dụng */
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  max-width: 768px;
+  max-width: 1440px;
   margin: 0 auto;
   width: 100%;
   padding: var(--space-4) var(--space-3);
 }
 
+/* ==========================================================================
+   HERO SECTION
+   ========================================================================== */
 .hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   padding: var(--space-5) 0 var(--space-4);
-}
-
-.hero-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.5px;
-  margin-bottom: var(--space-2);
-}
-
-.hero-subtitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--blue);
-  line-height: 1.5;
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-4) 0;
-}
-
-.placeholder-card {
-  background: var(--bg-1);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius);
-  padding: var(--space-4);
-  text-align: center;
   width: 100%;
 }
 
-.placeholder-status {
+.hero-header-text {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  margin-bottom: var(--space-2);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.4vw, 1.25rem);
+  font-weight: 700;
+  color: var(--blue-light);
+  line-height: 1.5;
+  letter-spacing: -0.2px;
+}
+
+/* Dòng chú thích số lượng xe */
+.fleet-caption {
+  margin-top: var(--space-3);
+  font-size: 0.85rem;
   color: var(--text-dim);
-  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ==========================================================================
+   NÚT KÊU GỌI HÀNH ĐỘNG (V-SHAPED BUTTON)
+   ========================================================================== */
+.hero-cta-wrap {
+  margin-top: var(--space-4);
+  display: flex;
+  justify-content: center;
+}
+
+.hero-cta-btn {
+  background-color: var(--blue);
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 16px 42px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+  box-shadow: 0 4px 22px rgba(20, 100, 244, 0.45);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), filter 0.25s var(--ease), background-color 0.25s var(--ease);
+  letter-spacing: -0.2px;
+  touch-action: manipulation;
+  min-height: 48px;
+}
+
+.hero-cta-btn:hover {
+  background-color: #2471FF;
+  transform: translateY(-2px);
+  filter: brightness(1.18);
+  box-shadow: 0 6px 30px rgba(20, 100, 244, 0.7);
+}
+
+.hero-cta-btn:active {
+  transform: translateY(0);
+}
+
+.cta-arrow {
+  transition: transform 0.25s var(--ease);
+}
+
+.hero-cta-btn:hover .cta-arrow {
+  transform: translateY(3px);
+}
+
+/* ==========================================================================
+   ĐIỆN THOẠI (< 640px)
+   ========================================================================== */
+@media (max-width: 639.98px) {
+  .hero {
+    padding: var(--space-4) 0 var(--space-3);
+  }
+
+  .hero-cta-btn {
+    width: 100%;
+    max-width: 320px;
+    font-size: 1rem;
+    padding: 14px 24px;
+  }
+}
+
+/* ==========================================================================
+   CÁC PHẦN KHÁC & CHÂN TRANG
+   ========================================================================== */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.quiz-section {
+  width: 100%;
+  min-height: 20px;
 }
 
 .app-footer {
@@ -99,24 +196,26 @@ body {
   padding: var(--space-5) 0 var(--space-3);
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
 }
 
 .disclaimer {
   font-size: 0.8rem;
   line-height: 1.6;
   color: var(--text-dim);
+  max-width: 720px;
+  margin: 0 auto;
 }
 
-@media (max-width: 480px) {
-  .app-container {
-    padding: var(--space-3);
+/* Hỗ trợ giảm chuyển động */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .hero-title {
-    font-size: 1.85rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1rem;
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

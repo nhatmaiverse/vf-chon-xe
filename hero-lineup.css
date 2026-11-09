@@ -1,0 +1,128 @@
+/* ===== Dàn xe theo tỉ lệ thật (hero-lineup) ===== */
+.lineup {
+  /* !important để không bị CSS cũ trong style.css ghi đè */
+  display: block !important;
+  box-sizing: border-box !important;
+  width: min(94vw, 1600px) !important;
+  max-width: none !important;
+  margin: 56px auto 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  align-self: center;
+  transform: none !important;
+  position: relative;
+  left: auto !important;
+  padding-bottom: 64px;            /* chỗ cho tên xe + chiều dài */
+  overflow: visible;
+}
+
+.lineup__row {
+  position: relative;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: center !important;
+  align-items: flex-end !important; /* mọi xe chạm cùng đường sàn */
+  width: 100%;
+  margin: 0 auto;
+}
+.lineup__row + .lineup__row { margin-top: 76px; }
+
+/* Đường sàn: nằm đúng đáy ảnh xe, rộng hơn dàn xe một chút */
+.lineup__row::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blue, #1464F4) 12%, var(--blue, #1464F4) 88%, transparent);
+  box-shadow: 0 0 12px 1px rgba(20, 100, 244, 0.55);
+  pointer-events: none;
+}
+
+.lineup__car {
+  position: relative;
+  flex: 0 0 auto !important;        /* chiều rộng do JS đặt theo length_m */
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.35s var(--ease, cubic-bezier(0.16, 1, 0.3, 1)),
+              opacity 0.35s ease, filter 0.35s ease;
+}
+.lineup__car img {
+  display: block;
+  width: 100% !important;
+  height: auto !important;          /* KHÔNG ép chiều cao */
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 0 !important;
+  object-fit: fill !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Bóng phản chiếu dưới sàn */
+.lineup__reflect {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: auto;
+  transform: scaleY(-1);
+  opacity: 0.22;
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.9), transparent 45%);
+          mask-image: linear-gradient(to top, rgba(0,0,0,0.9), transparent 45%);
+  pointer-events: none;
+}
+
+/* Tên xe + chiều dài, căn giữa dưới xe */
+.lineup__label {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.3;
+  pointer-events: none;
+}
+.lineup__name { display: block; font-weight: 800; font-size: 15px; color: var(--text, #fff); }
+.lineup__len  { display: block; font-size: 13px; color: var(--text-dim, #9AA3B5); }
+
+/* Khung thay thế khi ảnh lỗi (vẫn đúng tỉ lệ) */
+.lineup__fallback {
+  width: 100%;
+  aspect-ratio: 2.7 / 1;
+  border-radius: var(--radius, 12px);
+  background: var(--bg-1, #0B1330);
+  border: 1px solid var(--blue, #1464F4);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: var(--text, #fff);
+}
+
+/* Hover: xe được chọn sáng + nhích lên, xe khác mờ đi */
+.lineup:hover .lineup__car { opacity: 0.6; }
+.lineup .lineup__car:hover {
+  opacity: 1;
+  filter: brightness(1.15);
+  transform: translateY(-4px);
+}
+.lineup__car:focus { outline: none; }
+.lineup__car:focus-visible { outline: 1px solid rgba(255,255,255,0.5); outline-offset: 6px; border-radius: 6px; }
+
+@media (max-width: 639px) {
+  .lineup { width: 94vw; margin-top: 40px; }
+  .lineup__row + .lineup__row { margin-top: 64px; }
+  .lineup__name { font-size: 12px; }
+  .lineup__len  { font-size: 11px; }
+  .lineup__label { top: calc(100% + 10px); }
+}
