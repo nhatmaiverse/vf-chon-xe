@@ -1,16 +1,507 @@
-[
-  {
-    "id": 1,
-    "description": "Vợ chồng + 2 con nhỏ, đi làm 25 km/ngày, về quê 150 km mỗi tháng, chung cư không sạc được",
-    "inputs": {
-      "passengers": "3–4",
-      "budget": null,
-      "daily_distance_km": "<30",
-      "long_trip_frequency": "hàng tháng",
-      "home_charging": false,
-      "priority": "rộng rãi"
+{
+  "scenarios": [
+    {
+      "id": "S01",
+      "description": "Nhân viên văn phòng độc thân, đi làm 15 km/ngày trong phố, nhà phố có chỗ sạc, ngân sách 350 triệu, ưu tiên dễ đỗ xe",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 350000000,
+        "daily_km": 15,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "de_do"
+      },
+      "acceptable": [
+        "vf3",
+        "vf2"
+      ],
+      "note": ""
     },
-    "expected_cars": ["vf6", "vf7"],
-    "note": "Ví dụ mẫu để bạn tham khảo và điền tiếp các tình huống tiếp theo"
-  }
-]
+    {
+      "id": "S02",
+      "description": "Vợ chồng + 2 con nhỏ, đi làm 25 km/ngày, về quê 150 km mỗi tháng, chung cư không sạc được tại nhà, ngân sách 750 triệu",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 750000000,
+        "daily_km": 25,
+        "long_trip": "hang_thang",
+        "home_charging": false,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf6",
+        "vf7",
+        "vf5"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S03",
+      "description": "Gia đình 3 thế hệ 7 người, hay đi du lịch xa, ngân sách 2 tỷ",
+      "answers": {
+        "people": "6-7",
+        "budget_max_vnd": 2000000000,
+        "daily_km": 50,
+        "long_trip": "hang_thang",
+        "home_charging": true,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf9"
+      ],
+      "note": "Chỉ VF 9 có 7 chỗ"
+    },
+    {
+      "id": "S04",
+      "description": "Tài xế chạy dịch vụ, mỗi ngày 150 km, cần tiết kiệm, không có chỗ sạc ở nhà, ngân sách 600 triệu",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 600000000,
+        "daily_km": 150,
+        "long_trip": "hang_tuan",
+        "home_charging": false,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "vf5"
+      ],
+      "note": "VF 5 326 km NEDC, đủ ~2 ngày; VF 6 646 tr vẫn trong mức +10% (660 tr) nên cũng có thể chấp nhận – bạn tự quyết"
+    },
+    {
+      "id": "S05",
+      "description": "TÌNH HUỐNG BẪY: cần xe 7 chỗ nhưng ngân sách chỉ 400 triệu",
+      "answers": {
+        "people": "6-7",
+        "budget_max_vnd": 400000000,
+        "daily_km": 20,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "none"
+      ],
+      "note": "App phải nói thẳng là không có xe phù hợp, gợi ý tăng ngân sách hoặc giảm số chỗ"
+    },
+    {
+      "id": "S06",
+      "description": "Sinh viên, 1 người, đi 8 km/ngày, hiếm đi tỉnh, nhà có chỗ sạc, ngân sách 200 triệu, ưu tiên tiết kiệm",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 200000000,
+        "daily_km": 8,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "vf2"
+      ],
+      "note": "VF 3 285 tr vượt ngân sách +10%"
+    },
+    {
+      "id": "S07",
+      "description": "Mới đi làm, 2 người, đi 20 km/ngày, hàng tháng về quê 120 km, nhà có chỗ sạc, ngân sách 300 triệu, ưu tiên dễ đỗ",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 300000000,
+        "daily_km": 20,
+        "long_trip": "hang_thang",
+        "home_charging": true,
+        "priority": "de_do"
+      },
+      "acceptable": [
+        "vf3",
+        "vf2"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S08",
+      "description": "Nhân viên trẻ, 2 người, đi 40 km/ngày, hiếm đi tỉnh, không sạc được ở nhà, ngân sách 320 triệu, ưu tiên tiết kiệm",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 320000000,
+        "daily_km": 40,
+        "long_trip": "hiem",
+        "home_charging": false,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "vf3",
+        "vf2"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S09",
+      "description": "Freelancer, 1 người, đi 60 km/ngày, hiếm đi tỉnh, nhà có chỗ sạc, ngân sách 290 triệu, ưu tiên cảm giác lái",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 290000000,
+        "daily_km": 60,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "cam_giac_lai"
+      },
+      "acceptable": [
+        "vf3",
+        "vf2"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S10",
+      "description": "Vợ chồng + 1 bé, 3 người, đi 35 km/ngày, hàng tháng về quê 180 km, nhà có chỗ sạc, ngân sách 550 triệu, ưu tiên rộng rãi",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 550000000,
+        "daily_km": 35,
+        "long_trip": "hang_thang",
+        "home_charging": true,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf5"
+      ],
+      "note": "VF 6 646 tr vượt ngân sách +10%"
+    },
+    {
+      "id": "S11",
+      "description": "Vợ chồng + 2 con, 4 người, đi 20 km/ngày, hiếm đi tỉnh, nhà có chỗ sạc, ngân sách 700 triệu, ưu tiên rộng rãi",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 700000000,
+        "daily_km": 20,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf6",
+        "vf7",
+        "vf5"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S12",
+      "description": "Gia đình 4 người, đi 50 km/ngày, hàng tuần đi tỉnh, không sạc được ở nhà, ngân sách 800 triệu, ưu tiên cảm giác lái",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 800000000,
+        "daily_km": 50,
+        "long_trip": "hang_tuan",
+        "home_charging": false,
+        "priority": "cam_giac_lai"
+      },
+      "acceptable": [
+        "vf7",
+        "vf6"
+      ],
+      "note": "VF 8 898 tr vượt ngân sách +10%"
+    },
+    {
+      "id": "S13",
+      "description": "Gia đình 5 người, đi 25 km/ngày, hàng tháng đi tỉnh, nhà có chỗ sạc, ngân sách 1 tỷ, ưu tiên rộng rãi",
+      "answers": {
+        "people": "5",
+        "budget_max_vnd": 1000000000,
+        "daily_km": 25,
+        "long_trip": "hang_thang",
+        "home_charging": true,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf8",
+        "vf7",
+        "vf6"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S14",
+      "description": "Vợ chồng + 1 con, 3 người, đi 15 km/ngày, hiếm đi tỉnh, nhà có chỗ sạc, ngân sách 460 triệu, ưu tiên tiết kiệm",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 460000000,
+        "daily_km": 15,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "vf5",
+        "vf3"
+      ],
+      "note": "VF 5 496 tr vừa đủ trong mức +10% = 506 tr"
+    },
+    {
+      "id": "S15",
+      "description": "Gia đình 6 người, đi 40 km/ngày, hàng tháng đi xa, nhà có chỗ sạc, ngân sách 1,5 tỷ, ưu tiên rộng rãi",
+      "answers": {
+        "people": "6-7",
+        "budget_max_vnd": 1500000000,
+        "daily_km": 40,
+        "long_trip": "hang_thang",
+        "home_charging": true,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf9"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S16",
+      "description": "Gia đình 7 người, đi 20 km/ngày, hiếm đi tỉnh, không sạc được ở nhà, ngân sách 1,25 tỷ, ưu tiên rộng rãi",
+      "answers": {
+        "people": "6-7",
+        "budget_max_vnd": 1250000000,
+        "daily_km": 20,
+        "long_trip": "hiem",
+        "home_charging": false,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf9"
+      ],
+      "note": "1.348 tr vẫn trong mức +10% = 1.375 tr"
+    },
+    {
+      "id": "S17",
+      "description": "Tài xế taxi công nghệ, 4 người, đi 200 km/ngày, hàng tuần đi tỉnh, không sạc được ở nhà, ngân sách 700 triệu, ưu tiên tiết kiệm",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 700000000,
+        "daily_km": 200,
+        "long_trip": "hang_tuan",
+        "home_charging": false,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "vf6",
+        "vf7"
+      ],
+      "note": "không xe nào trong ngân sách đạt 3 lần quãng đường/ngày, chọn xe chạy xa nhất + sạc nhanh"
+    },
+    {
+      "id": "S18",
+      "description": "Giao hàng nội thành, 2 người, đi 100 km/ngày, hiếm đi tỉnh, nhà có chỗ sạc, ngân sách 350 triệu, ưu tiên tiết kiệm",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 350000000,
+        "daily_km": 100,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "vf3",
+        "vf2"
+      ],
+      "note": "đủ dùng nhưng phải sạc mỗi đêm"
+    },
+    {
+      "id": "S19",
+      "description": "Tài xế xe hợp đồng đường dài, 4 người, đi 150 km/ngày, hàng tuần đi tỉnh, không sạc được ở nhà, ngân sách 1 tỷ, ưu tiên rộng rãi",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 1000000000,
+        "daily_km": 150,
+        "long_trip": "hang_tuan",
+        "home_charging": false,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf8",
+        "vf6"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S20",
+      "description": "Vợ chồng thích phượt, 2 người, đi 20 km/ngày, hàng tuần đi tỉnh 300 km, nhà có chỗ sạc, ngân sách 700 triệu, ưu tiên cảm giác lái",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 700000000,
+        "daily_km": 20,
+        "long_trip": "hang_tuan",
+        "home_charging": true,
+        "priority": "cam_giac_lai"
+      },
+      "acceptable": [
+        "vf6",
+        "vf7"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S21",
+      "description": "Gia đình 4 người, đi 30 km/ngày, hàng tuần về quê 250 km, nhà có chỗ sạc, ngân sách 950 triệu, ưu tiên rộng rãi",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 950000000,
+        "daily_km": 30,
+        "long_trip": "hang_tuan",
+        "home_charging": true,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf8",
+        "vf6"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S22",
+      "description": "Kỹ sư công trình, 1 người, đi 120 km/ngày, hàng tuần đi tỉnh, không sạc được ở nhà, ngân sách 680 triệu, ưu tiên tiết kiệm",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 680000000,
+        "daily_km": 120,
+        "long_trip": "hang_tuan",
+        "home_charging": false,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "vf6"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S23",
+      "description": "Doanh nhân, 3 người, đi 40 km/ngày, hàng tháng đi chuyến 400 km, nhà có chỗ sạc, ngân sách 1,4 tỷ, ưu tiên rộng rãi",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 1400000000,
+        "daily_km": 40,
+        "long_trip": "hang_thang",
+        "home_charging": true,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf8",
+        "vf9"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S24",
+      "description": "Ở chung cư, 3 người, đi 15 km/ngày, hiếm đi tỉnh, không sạc được ở nhà, ngân sách 500 triệu, ưu tiên tiết kiệm",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 500000000,
+        "daily_km": 15,
+        "long_trip": "hiem",
+        "home_charging": false,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "vf5",
+        "vf3"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S25",
+      "description": "Ở chung cư, 4 người, đi 45 km/ngày, hàng tháng đi tỉnh, không sạc được ở nhà, ngân sách 680 triệu, ưu tiên rộng rãi",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 680000000,
+        "daily_km": 45,
+        "long_trip": "hang_thang",
+        "home_charging": false,
+        "priority": "rong_rai"
+      },
+      "acceptable": [
+        "vf6",
+        "vf5"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S26",
+      "description": "Ở chung cư, 5 người, đi 30 km/ngày, hiếm đi tỉnh, không sạc được ở nhà, ngân sách 900 triệu, ưu tiên cảm giác lái",
+      "answers": {
+        "people": "5",
+        "budget_max_vnd": 900000000,
+        "daily_km": 30,
+        "long_trip": "hiem",
+        "home_charging": false,
+        "priority": "cam_giac_lai"
+      },
+      "acceptable": [
+        "vf7",
+        "vf8"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S27",
+      "description": "Người lớn tuổi mới học lái, 2 người, đi 10 km/ngày, hiếm đi tỉnh, nhà có chỗ sạc, ngân sách 400 triệu, ưu tiên dễ đỗ",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 400000000,
+        "daily_km": 10,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "de_do"
+      },
+      "acceptable": [
+        "vf3",
+        "vf2"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S28",
+      "description": "Mẹ đưa đón con trong phố đông, 3 người, đi 15 km/ngày, hiếm đi tỉnh, nhà có chỗ sạc, ngân sách 550 triệu, ưu tiên dễ đỗ",
+      "answers": {
+        "people": "3-4",
+        "budget_max_vnd": 550000000,
+        "daily_km": 15,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "de_do"
+      },
+      "acceptable": [
+        "vf5",
+        "vf3"
+      ],
+      "note": ""
+    },
+    {
+      "id": "S29",
+      "description": "TÌNH HUỐNG BẪY: Gia đình 5 người nhưng ngân sách chỉ 250 triệu",
+      "answers": {
+        "people": "5",
+        "budget_max_vnd": 250000000,
+        "daily_km": 20,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "none"
+      ],
+      "note": "xe 5 chỗ rẻ nhất là VF 5 496 tr (giả định: đi 20 km/ngày, hiếm đi tỉnh, có sạc ở nhà, ưu tiên tiết kiệm)"
+    },
+    {
+      "id": "S30",
+      "description": "TÌNH HUỐNG BẪY: Đi 300 km mỗi ngày nhưng chỉ muốn xe dưới 300 triệu, 1 người, nhà có chỗ sạc",
+      "answers": {
+        "people": "1-2",
+        "budget_max_vnd": 300000000,
+        "daily_km": 300,
+        "long_trip": "hiem",
+        "home_charging": true,
+        "priority": "tiet_kiem"
+      },
+      "acceptable": [
+        "none"
+      ],
+      "note": "VF 2/VF 3 chỉ chạy được khoảng 210–215 km/lần sạc (giả định: hiếm đi tỉnh, ưu tiên tiết kiệm)"
+    }
+  ]
+}

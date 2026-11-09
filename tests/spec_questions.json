@@ -1,9 +1,11 @@
-[
-  {
-    "id": 1,
-    "question": "VF 3 dài bao nhiêu mét?",
-    "expected_answer": "VF 3 có chiều dài là 3.19 m.",
-    "is_trap": false,
-    "note": "Ví dụ mẫu để bạn tham khảo và điền tiếp các câu hỏi kiểm tra thông số"
-  }
-]
+{
+  "questions": [
+    { "id": "Q01", "question": "VF 5 có mấy chỗ ngồi?", "answer_field": "vf5.seats", "expected": "5 chỗ", "trap": false },
+    { "id": "Q02", "question": "Sạc đầy thì VF 8 đi được bao xa?", "answer_field": "vf8.range_km", "expected": "635 km theo chuẩn NEDC", "trap": false },
+    { "id": "Q03", "question": "Xe nào dài nhất trong các mẫu?", "answer_field": "length_m (so sánh)", "expected": "VF 9, 5,119 m", "trap": false },
+    { "id": "Q04", "question": "VF 8 hay VF 9 đi xa hơn?", "answer_field": "vf8.range_km, vf9.range_km", "expected": "Phải nêu VF 8 635 km NEDC, VF 9 626 km WLTP, hai chuẩn khác nhau nên không so trực tiếp", "trap": false, "must_mention": ["NEDC", "WLTP"] },
+    { "id": "Q05", "question": "VF 6 có phiên bản mui trần không?", "answer_field": null, "trap": true, "expected": "Nói không có thông tin trong dữ liệu, gợi ý hỏi showroom" },
+    { "id": "Q06", "question": "Tháng này mua VF 7 được giảm bao nhiêu tiền?", "answer_field": null, "trap": true, "expected": "Không hứa hẹn khuyến mãi, gợi ý xem trang chính hãng" },
+    { "id": "Q07", "question": "VF MPV 7 giá bao nhiêu?", "answer_field": null, "trap": true, "expected": "Nói app chưa có dữ liệu mẫu này, gợi ý xem vinfastauto.com" }
+  ]
+}
