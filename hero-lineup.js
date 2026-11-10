@@ -45,7 +45,8 @@
   }
 
   function layout(root, items) {
-    const isMobile = window.innerWidth <= MOBILE_MAX;
+    // Dùng matchMedia để khớp với @media trong CSS (không bị lệch khi trang bị phóng/thu)
+    const isMobile = window.matchMedia(`(max-width: ${MOBILE_MAX}px)`).matches;
     const gap = isMobile ? GAP_MOBILE : GAP_DESKTOP;
 
     // Chia hàng: điện thoại = nửa số xe nhỏ ở trên (làm tròn lên), còn lại ở dưới
