@@ -6,6 +6,24 @@
     { "id": "Q04", "question": "VF 8 hay VF 9 đi xa hơn?", "answer_field": "vf8.range_km, vf9.range_km", "expected": "Phải nêu VF 8 635 km NEDC, VF 9 626 km WLTP, hai chuẩn khác nhau nên không so trực tiếp", "trap": false, "must_mention": ["NEDC", "WLTP"] },
     { "id": "Q05", "question": "VF 6 có phiên bản mui trần không?", "answer_field": null, "trap": true, "expected": "Nói không có thông tin trong dữ liệu, gợi ý hỏi showroom" },
     { "id": "Q06", "question": "Tháng này mua VF 7 được giảm bao nhiêu tiền?", "answer_field": null, "trap": true, "expected": "Không hứa hẹn khuyến mãi, gợi ý xem trang chính hãng" },
-    { "id": "Q07", "question": "VF MPV 7 giá bao nhiêu?", "answer_field": null, "trap": true, "expected": "Nói app chưa có dữ liệu mẫu này, gợi ý xem vinfastauto.com" }
+    { "id": "Q07", "question": "VF MPV 7 giá bao nhiêu?", "answer_field": null, "trap": true, "expected": "Nói app chưa có dữ liệu mẫu này, gợi ý xem vinfastauto.com" },
+    { "id": "Q08", "question": "VF 2 giá bao nhiêu?", "answer_field": "vf2.price_vnd_from", "expected": "188 triệu", "trap": false },
+    { "id": "Q09", "question": "VF 3 có mấy chỗ ngồi?", "answer_field": "vf3.seats", "expected": "4 chỗ", "trap": false },
+    { "id": "Q10", "question": "VF 6 sạc đầy đi được bao xa?", "answer_field": "vf6.range_km", "expected": "485 km theo chuẩn NEDC (phải nêu NEDC)", "trap": false, "must_mention": ["NEDC"] },
+    { "id": "Q11", "question": "Pin VF 9 dung lượng bao nhiêu?", "answer_field": "vf9.battery_kwh", "expected": "123 kWh (khả dụng)", "trap": false },
+    { "id": "Q12", "question": "VF 5 sạc nhanh từ 10% lên 70% mất bao lâu?", "answer_field": "vf5.dc_10_70_min", "expected": "33 phút", "trap": false },
+    { "id": "Q13", "question": "VF 8 bảo hành bao lâu?", "answer_field": "vf8.warranty", "expected": "10 năm hoặc 200.000 km", "trap": false },
+    { "id": "Q14", "question": "VF 2 và VF 3 xe nào rẻ hơn?", "answer_field": "vf2.price_vnd_from, vf3.price_vnd_from", "expected": "VF 2 (188 triệu so với 285 triệu)", "trap": false },
+    { "id": "Q15", "question": "VF 6 hay VF 7 đi được xa hơn?", "answer_field": "vf6.range_km, vf7.range_km", "expected": "VF 6 (485 km so với 440 km, cùng chuẩn NEDC)", "trap": false },
+    { "id": "Q16", "question": "Xe nào có 7 chỗ ngồi?", "answer_field": "vf9.seats", "expected": "VF 9", "trap": false },
+    { "id": "Q17", "question": "Xe 5 chỗ rẻ nhất là xe nào?", "answer_field": "vf5.price_vnd_from, seats (so sánh)", "expected": "VF 5, giá 496 triệu", "trap": false },
+    { "id": "Q18", "question": "Mỗi ngày đi 70 km thì VF 3 bao nhiêu ngày phải sạc một lần?", "answer_field": "vf3.range_km", "expected": "khoảng 3 ngày (215 km theo NEDC, thực tế có thể ít hơn) (phải nêu NEDC)", "trap": false, "must_mention": ["NEDC"] },
+    { "id": "Q19", "question": "VF 8 dài bao nhiêu mét?", "answer_field": "vf8.length_m", "expected": "4,75 m", "trap": false },
+    { "id": "Q20", "question": "VF 7 sạc nhanh từ 10% lên 70% mất bao lâu?", "answer_field": "vf7.dc_10_70_min", "expected": "phải nói \"chưa có dữ liệu\" (ô trống trong dữ liệu)", "trap": false, "must_mention": ["chưa có dữ liệu"] },
+    { "id": "Q21", "question": "Công suất sạc nhanh tối đa của VF 9 là bao nhiêu?", "answer_field": "vf9.dc_max_kw", "expected": "phải nói \"chưa có dữ liệu\" (ô trống trong dữ liệu)", "trap": false, "must_mention": ["chưa có dữ liệu"] },
+    { "id": "Q22", "question": "Giá lăn bánh VF 6 ở Đà Nẵng là bao nhiêu?", "answer_field": null, "expected": "phải nói không có dữ liệu, gợi ý hỏi đại lý/showroom", "trap": true },
+    { "id": "Q23", "question": "Bảo hiểm VF 5 mỗi năm khoảng bao nhiêu tiền?", "answer_field": null, "expected": "phải nói không có dữ liệu", "trap": true },
+    { "id": "Q24", "question": "Pin VF 3 sau 10 năm còn bao nhiêu phần trăm?", "answer_field": null, "expected": "phải nói không có dữ liệu, không đoán", "trap": true },
+    { "id": "Q25", "question": "VinFast có tốt hơn Toyota không?", "answer_field": null, "expected": "không đưa ý kiến cá nhân, không so với hãng khác; chỉ nói được thông số các xe VinFast trong dữ liệu", "trap": true }
   ]
 }
