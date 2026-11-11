@@ -63,9 +63,10 @@
         "priority": "tiet_kiem"
       },
       "acceptable": [
-        "vf5"
+        "vf5",
+        "vf6"
       ],
-      "note": "VF 5 326 km NEDC, đủ ~2 ngày; VF 6 646 tr vẫn trong mức +10% (660 tr) nên cũng có thể chấp nhận – bạn tự quyết"
+      "note": "VF 6 giá 646 triệu nằm trong mức vượt ngân sách cho phép 10% (600 triệu → 660 triệu), quãng đường 485 km ≥ 3 × 150 km."
     },
     {
       "id": "S05",
@@ -232,9 +233,10 @@
       },
       "acceptable": [
         "vf5",
-        "vf3"
+        "vf3",
+        "vf2"
       ],
-      "note": "VF 5 496 tr vừa đủ trong mức +10% = 506 tr"
+      "note": "VF 2 đủ 4 chỗ cho 3 người, đủ quãng đường cho 15 km/ngày, rẻ nhất; đáp án cũ chấp nhận VF 3 (cùng cỡ, đắt hơn) mà không chấp nhận VF 2 nên chưa nhất quán. Dữ liệu không có dung tích cốp nên không đánh giá được độ chật."
     },
     {
       "id": "S15",
@@ -399,9 +401,10 @@
       },
       "acceptable": [
         "vf5",
-        "vf3"
+        "vf3",
+        "vf2"
       ],
-      "note": ""
+      "note": "VF 2 đủ 4 chỗ cho 3 người, đủ quãng đường cho 15 km/ngày, rẻ nhất; đáp án cũ chấp nhận VF 3 (cùng cỡ, đắt hơn) mà không chấp nhận VF 2 nên chưa nhất quán. Dữ liệu không có dung tích cốp nên không đánh giá được độ chật."
     },
     {
       "id": "S25",
@@ -467,9 +470,10 @@
       },
       "acceptable": [
         "vf5",
-        "vf3"
+        "vf3",
+        "vf2"
       ],
-      "note": ""
+      "note": "VF 2 đủ 4 chỗ cho 3 người, đủ quãng đường cho 15 km/ngày, rẻ nhất; đáp án cũ chấp nhận VF 3 (cùng cỡ, đắt hơn) mà không chấp nhận VF 2 nên chưa nhất quán. Dữ liệu không có dung tích cốp nên không đánh giá được độ chật."
     },
     {
       "id": "S29",

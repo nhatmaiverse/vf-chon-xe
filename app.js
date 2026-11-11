@@ -8,6 +8,27 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
 });
 
+// Lắng nghe sự kiện hoàn thành 6 câu hỏi ('quiz:done')
+document.addEventListener('quiz:done', async (e) => {
+  const answers = (e && e.detail) || window.quizAnswers;
+  if (!answers || typeof window.scoreCars !== 'function') return;
+
+  try {
+    const res = await fetch('data/cars.json');
+    if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+    const data = await res.json();
+    const cars = data.cars || [];
+
+    const result = window.scoreCars(cars, answers);
+    window.lastScoringResult = result;
+
+    console.log('Scoring result:', result);
+    console.table(result.top);
+  } catch (err) {
+    console.error('Lỗi khi chấm điểm xe:', err);
+  }
+});
+
 /**
  * Hiệu ứng vào của phần tiêu đề, dòng phụ và nút kêu gọi hành động
  */
