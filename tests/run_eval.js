@@ -831,13 +831,14 @@ async function runRealMode(questions, runOptions) {
       }
 
       const noteStr = evalResult.notes.length > 0 ? evalResult.notes.join('; ') : '-';
+      const answerMaxLen = evalResult.label === 'CẦN XEM' ? 1500 : 300;
       const rowMarkdown =
         '| ' +
         formatMarkdownCell(q.id) +
         ' | ' +
         formatMarkdownCell(q.question) +
         ' | ' +
-        formatMarkdownCell(answerText, 300) +
+        formatMarkdownCell(answerText, answerMaxLen) +
         ' | ' +
         formatMarkdownCell(modelUsed) +
         ' | ' +
