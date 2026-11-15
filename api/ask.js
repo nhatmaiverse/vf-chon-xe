@@ -17,9 +17,16 @@ const BODY_READ_TIMEOUT_MS = 5000;
 const MAX_QUESTION_LENGTH = 300;
 
 // Thời gian chờ tối đa mỗi lần gọi Gemini API: 10 giây; chờ trước khi thử lại: 2 giây; tổng thời gian tối đa: 30 giây
-const GEMINI_TIMEOUT_MS = 10000;
-const GEMINI_RETRY_DELAY_MS = 2000;
-const GEMINI_TOTAL_TIMEOUT_MS = 30000;
+// Cho phép ghi đè qua biến môi trường khi chạy test giả lập để không bị chậm
+function getGeminiTimeoutMs() {
+  return Number(process.env.GEMINI_TIMEOUT_MS) || 10000;
+}
+function getGeminiRetryDelayMs() {
+  return Number(process.env.GEMINI_RETRY_DELAY_MS) || 2000;
+}
+function getGeminiTotalTimeoutMs() {
+  return Number(process.env.GEMINI_TOTAL_TIMEOUT_MS) || 30000;
+}
 const NON_RETRYABLE_HTTP_STATUSES = [400, 401, 403, 404, 429];
 
 // Ghi chú: Bộ đếm giới hạn tốc độ (rate limit) trong bộ nhớ RAM này chỉ là biện pháp giảm nhẹ tạm thời.
@@ -380,6 +387,183 @@ function buildNoCarMessage(scoreResult) {
   );
 }
 
+// Bảng chuyển đổi mã lý do sang câu tiếng Việt dễ hiểu
+const REASON_LABELS = {
+  du_cho: 'đủ chỗ cho số người bạn chọn',
+  trong_ngan_sach: 'nằm trong ngân sách của bạn (đã cho phép vượt tối đa 10%)',
+  range_du_x3: 'đi được hơn 3 ngày với một lần sạc theo quãng đường bạn đi mỗi ngày',
+  di_xa_on: 'hợp chuyến đi tỉnh hàng tháng',
+  di_xa_tot: 'quãng đường dài, hợp chuyến đi tỉnh hàng tuần',
+  de_do: 'nhỏ gọn, dễ đỗ xe',
+  rong_rai: 'rộng rãi cho cả nhà',
+  rong_rai_vua: 'khá rộng rãi, nhỏ hơn một chút so với nhóm xe lớn nhất',
+  tiet_kiem: 'giá thấp trong các xe phù hợp',
+  cam_giac_lai: 'thuộc nhóm SUV cỡ vừa trở lên, hợp với cảm giác lái bạn ưu tiên',
+  sac_nhanh: 'sạc nhanh DC, tiện khi không có chỗ sạc ở nhà',
+  sac_kha: 'sạc nhanh DC ở mức khá',
+  phai_sac_moi_ngay: 'với quãng đường bạn đi và không có chỗ sạc ở nhà, có thể phải sạc gần như mỗi ngày',
+  chay_tinh_kho: 'quãng đường dưới 300 km, hơi ngắn nếu bạn hay đi tỉnh',
+  thieu_du_lieu_seats: 'chưa có dữ liệu số chỗ ngồi để đánh giá số chỗ và độ rộng rãi',
+  thieu_du_lieu_price_vnd_from: 'chưa có dữ liệu giá xe để đánh giá ngân sách và mức tiết kiệm',
+  thieu_du_lieu_range_km: 'chưa có dữ liệu quãng đường để đánh giá khả năng di chuyển',
+  thieu_du_lieu_length_m: 'chưa có dữ liệu chiều dài xe để đánh giá khả năng đỗ xe và độ rộng rãi',
+  thieu_du_lieu_segment: 'chưa có dữ liệu phân khúc xe để đánh giá cảm giác lái',
+  thieu_du_lieu_dc_max_kw: 'chưa có dữ liệu công suất sạc DC tối đa để đánh giá sạc nhanh',
+  thieu_du_lieu_dc_10_70_min: 'chưa có dữ liệu thời gian sạc nhanh 10–70% để đánh giá sạc nhanh'
+};
+const DEGRADED_REASON_MAP = REASON_LABELS;
+
+/**
+ * Đổi mã lý do sang câu tiếng Việt cho chế độ giải thích hạ cấp. Mã lạ thì bỏ qua (trả về null), không in mã thô.
+ */
+function mapDegradedReason(code) {
+  if (typeof code !== 'string') return null;
+  if (REASON_LABELS[code]) {
+    return REASON_LABELS[code];
+  }
+  if (code.startsWith('thieu_du_lieu')) {
+    return 'chưa có dữ liệu để đánh giá một tiêu chí';
+  }
+  return null;
+}
+const mapReasonCode = mapDegradedReason;
+
+/**
+ * Dựng đoạn giới thiệu và lý do cho một xe trong top khi hạ cấp
+ */
+function buildDegradedCarText(car, topItem) {
+  const rawName =
+    car && car.name != null
+      ? car.name
+      : topItem && topItem.name != null
+      ? topItem.name
+      : '';
+  const rawVersion = car && car.version != null ? String(car.version).trim() : '';
+
+  let carTitle = '';
+  if (rawName && rawVersion) {
+    if (rawVersion.toLowerCase().includes(rawName.toLowerCase())) {
+      carTitle = rawVersion;
+    } else {
+      carTitle = rawName + ' ' + rawVersion;
+    }
+  } else if (rawVersion) {
+    carTitle = rawVersion;
+  } else if (rawName) {
+    carTitle = rawName;
+  } else {
+    carTitle = 'chưa có dữ liệu';
+  }
+
+  const priceVal =
+    car && car.price_vnd_from != null
+      ? Math.round(car.price_vnd_from / 1000000)
+      : 'chưa có dữ liệu';
+  const priceStr =
+    priceVal !== 'chưa có dữ liệu' ? priceVal + ' triệu đồng' : 'chưa có dữ liệu';
+
+  const rangeVal = car && car.range_km != null ? car.range_km : 'chưa có dữ liệu';
+  const rangeStr =
+    rangeVal !== 'chưa có dữ liệu' ? rangeVal + ' km' : 'chưa có dữ liệu';
+
+  const standard =
+    car && car.range_standard != null
+      ? car.range_standard
+      : topItem && topItem.range_standard != null
+      ? topItem.range_standard
+      : 'chưa có dữ liệu';
+
+  const seatsVal = car && car.seats != null ? car.seats : 'chưa có dữ liệu';
+  const seatsStr =
+    seatsVal !== 'chưa có dữ liệu' ? seatsVal + ' chỗ' : 'chưa có dữ liệu';
+
+  const specSentence =
+    carTitle +
+    ': giá từ ' +
+    priceStr +
+    ', quãng đường ' +
+    rangeStr +
+    ' theo chuẩn ' +
+    standard +
+    ', ' +
+    seatsStr +
+    '.';
+
+  const rawReasons =
+    topItem && Array.isArray(topItem.reasons) ? topItem.reasons : [];
+  const suitableReasons = [];
+  const noteReasons = [];
+
+  for (let i = 0; i < rawReasons.length; i++) {
+    const code = rawReasons[i];
+    const text = mapDegradedReason(code);
+    if (!text) continue;
+
+    if (code === 'phai_sac_moi_ngay' || code === 'chay_tinh_kho' || text.startsWith('LƯU Ý:')) {
+      const cleanNote = text.replace(/^LƯU Ý:\s*/i, '').trim();
+      if (cleanNote && noteReasons.indexOf(cleanNote) === -1) {
+        noteReasons.push(cleanNote);
+      }
+    } else {
+      if (suitableReasons.indexOf(text) === -1) {
+        suitableReasons.push(text);
+      }
+    }
+  }
+
+  const sentences = [specSentence];
+
+  if (suitableReasons.length > 0) {
+    sentences.push('Vì sao hợp bạn: ' + suitableReasons.join('; ') + '.');
+  }
+
+  if (noteReasons.length > 0) {
+    sentences.push('LƯU Ý: ' + noteReasons.join('; ') + '.');
+  }
+
+  return sentences.join(' ');
+}
+
+/**
+ * Dựng lời giải thích tự động từ dữ liệu khi gọi Gemini thất bại ở chế độ explain
+ */
+function buildDegradedExplainText(topCarsFull, topItems) {
+  const cars = Array.isArray(topCarsFull) ? topCarsFull : [];
+  const items = Array.isArray(topItems) ? topItems.slice(0, 2) : [];
+  const paragraphs = [];
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const car =
+      cars.find(function (c) {
+        return c && c.id === item.id;
+      }) ||
+      (Array.isArray(carsData.cars)
+        ? carsData.cars.find(function (c) {
+            return c && c.id === item.id;
+          })
+        : null);
+
+    paragraphs.push(buildDegradedCarText(car, item));
+  }
+
+  if (items.length >= 2) {
+    const std0 = items[0] && items[0].range_standard;
+    const std1 = items[1] && items[1].range_standard;
+    if (std0 && std1 && std0 !== std1) {
+      paragraphs.push(
+        'Hai xe này đo quãng đường theo hai chuẩn khác nhau (NEDC/WLTP) nên không so trực tiếp được.'
+      );
+    }
+  }
+
+  paragraphs.push(
+    'Đây là phần giải thích tự động từ dữ liệu vì trợ lý AI đang bận. Bạn nên lái thử và kiểm tra giá mới nhất tại vinfastauto.com.'
+  );
+
+  return paragraphs.join('\n\n');
+}
+
 /**
  * Tạm dừng thực thi trong một khoảng thời gian (ms)
  */
@@ -398,7 +582,7 @@ function logGeminiError(httpCode, errorStatus, errorMessage, apiKey) {
   if (apiKey) {
     msgStr = msgStr.split(apiKey).join('[redacted]');
   }
-  const line = (
+  let line = (
     'Gemini error | HTTP=' +
     String(httpCode) +
     ' | error.status=' +
@@ -410,6 +594,11 @@ function logGeminiError(httpCode, errorStatus, errorMessage, apiKey) {
     .replace(/[\r\n\t]+/g, ' ')
     .trim()
     .slice(0, 200);
+
+  if (apiKey) {
+    line = line.split(apiKey).join('[redacted]');
+  }
+  line = line.split('KEY_GIA').join('[redacted]').replace(/AQ\.[A-Za-z0-9_-]+/g, '[redacted]');
   console.error(line);
 }
 
@@ -447,7 +636,8 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
         ok: false,
         retryable: true,
         status: 502,
-        error: 'Hệ thống AI phản hồi quá ' + timeoutSec + ' giây. Vui lòng thử lại sau.'
+        error: 'Hệ thống AI phản hồi quá ' + timeoutSec + ' giây. Vui lòng thử lại sau.',
+        degraded_reason: 'qua_thoi_gian'
       };
     }
 
@@ -461,7 +651,8 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
       ok: false,
       retryable: true,
       status: 502,
-      error: 'Không thể kết nối tới dịch vụ AI. Vui lòng thử lại sau.'
+      error: 'Không thể kết nối tới dịch vụ AI. Vui lòng thử lại sau.',
+      degraded_reason: 'loi_khac'
     };
   }
 
@@ -486,18 +677,23 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
         ok: false,
         retryable: false,
         status: 429,
-        error: 'Hệ thống AI đang hết lượt gọi tạm thời. Vui lòng thử lại sau ít phút.'
+        error: 'Hệ thống AI đang hết lượt gọi tạm thời. Vui lòng thử lại sau ít phút.',
+        degraded_reason: 'het_luot'
       };
     }
 
+    const is5xx = response.status === 503 || response.status >= 500;
     const isNonRetryable = NON_RETRYABLE_HTTP_STATUSES.indexOf(response.status) !== -1;
-    const isRetryable = !isNonRetryable && (response.status === 503 || response.status >= 500);
+    const isRetryable = !isNonRetryable && is5xx;
 
     return {
       ok: false,
       retryable: isRetryable,
       status: 502,
-      error: 'Dịch vụ AI tạm thời gián đoạn. Vui lòng thử lại sau.'
+      error: is5xx
+        ? 'Dịch vụ AI tạm thời gián đoạn. Vui lòng thử lại sau.'
+        : 'Yêu cầu tới dịch vụ AI thất bại (mã ' + response.status + ').',
+      degraded_reason: is5xx ? 'qua_tai' : 'loi_khac'
     };
   }
 
@@ -511,7 +707,8 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
       ok: false,
       retryable: false,
       status: 502,
-      error: 'Phản hồi từ dịch vụ AI không hợp lệ.'
+      error: 'Phản hồi từ dịch vụ AI không hợp lệ.',
+      degraded_reason: 'loi_khac'
     };
   }
 
@@ -520,7 +717,8 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
       ok: false,
       retryable: false,
       status: 502,
-      error: 'Yêu cầu bị chặn bởi bộ lọc an toàn của AI.'
+      error: 'Yêu cầu bị chặn bởi bộ lọc an toàn của AI.',
+      degraded_reason: 'loi_khac'
     };
   }
 
@@ -530,7 +728,8 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
       ok: false,
       retryable: false,
       status: 502,
-      error: 'Không nhận được lời giải thích từ AI.'
+      error: 'Không nhận được lời giải thích từ AI.',
+      degraded_reason: 'loi_khac'
     };
   }
 
@@ -545,7 +744,8 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
       ok: false,
       retryable: false,
       status: 502,
-      error: reasonError
+      error: reasonError,
+      degraded_reason: 'loi_khac'
     };
   }
 
@@ -554,7 +754,8 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
       ok: false,
       retryable: false,
       status: 502,
-      error: 'Không nhận được lời giải thích từ AI.'
+      error: 'Không nhận được lời giải thích từ AI.',
+      degraded_reason: 'loi_khac'
     };
   }
 
@@ -573,7 +774,8 @@ async function callGeminiOnce(apiKey, model, requestBody, timeoutMs) {
       ok: false,
       retryable: false,
       status: 502,
-      error: 'Lời giải thích từ AI bị rỗng hoặc bị chặn.'
+      error: 'Lời giải thích từ AI bị rỗng hoặc bị chặn.',
+      degraded_reason: 'loi_khac'
     };
   }
 
@@ -606,13 +808,17 @@ async function callGemini(apiKey, model, fallbackModel, systemPrompt, userPrompt
     }
   });
 
-  const deadline = Date.now() + GEMINI_TOTAL_TIMEOUT_MS;
-  const totalTimeoutSec = Math.round(GEMINI_TOTAL_TIMEOUT_MS / 1000);
+  const timeoutMs = getGeminiTimeoutMs();
+  const retryDelayMs = getGeminiRetryDelayMs();
+  const totalTimeoutMs = getGeminiTotalTimeoutMs();
+
+  const deadline = Date.now() + totalTimeoutMs;
+  const totalTimeoutSec = Math.max(1, Math.round(totalTimeoutMs / 1000));
 
   function getCallTimeoutMs() {
     const remainingMs = deadline - Date.now();
     if (remainingMs <= 0) return 0;
-    return Math.min(GEMINI_TIMEOUT_MS, remainingMs);
+    return Math.min(timeoutMs, remainingMs);
   }
 
   function buildDeadlineError() {
@@ -620,7 +826,8 @@ async function callGemini(apiKey, model, fallbackModel, systemPrompt, userPrompt
     return {
       ok: false,
       status: 502,
-      error: 'Hệ thống AI phản hồi quá ' + totalTimeoutSec + ' giây. Vui lòng thử lại sau.'
+      error: 'Hệ thống AI phản hồi quá ' + totalTimeoutSec + ' giây. Vui lòng thử lại sau.',
+      degraded_reason: 'qua_thoi_gian'
     };
   }
 
@@ -637,13 +844,14 @@ async function callGemini(apiKey, model, fallbackModel, systemPrompt, userPrompt
       status: result.status,
       error: result.error,
       text: result.text,
-      model_used: result.model_used
+      model_used: result.model_used,
+      degraded_reason: result.degraded_reason
     };
   }
 
-  // Thử lại model chính 1 lần sau 2 giây
-  if (deadline - Date.now() > GEMINI_RETRY_DELAY_MS) {
-    await sleep(GEMINI_RETRY_DELAY_MS);
+  // Thử lại model chính 1 lần sau khoảng chờ retry
+  if (deadline - Date.now() > retryDelayMs) {
+    await sleep(retryDelayMs);
     const retryTimeoutMs = getCallTimeoutMs();
     if (retryTimeoutMs <= 0) {
       return buildDeadlineError();
@@ -656,7 +864,8 @@ async function callGemini(apiKey, model, fallbackModel, systemPrompt, userPrompt
         status: result.status,
         error: result.error,
         text: result.text,
-        model_used: result.model_used
+        model_used: result.model_used,
+        degraded_reason: result.degraded_reason
       };
     }
   }
@@ -677,7 +886,8 @@ async function callGemini(apiKey, model, fallbackModel, systemPrompt, userPrompt
     status: result.status,
     error: result.error,
     text: result.text,
-    model_used: result.model_used
+    model_used: result.model_used,
+    degraded_reason: result.degraded_reason
   };
 }
 
@@ -810,10 +1020,17 @@ module.exports = async function handler(req, res) {
 
       const llmResponse = await callGemini(apiKey, model, fallbackModel, SYSTEM_PROMPT_EXPLAIN, userPrompt);
       if (!llmResponse.ok) {
-        return sendJson(res, llmResponse.status, {
-          ok: false,
+        const degradedReason = llmResponse.degraded_reason || 'loi_khac';
+        console.warn('Explain degraded: ' + degradedReason);
+        const fallbackText = buildDegradedExplainText(topCarsFull, scoreResult.top);
+        return sendJson(res, 200, {
+          ok: true,
           mode: 'explain',
-          error: llmResponse.error
+          text: fallbackText,
+          top: scoreResult.top,
+          source: 'rule',
+          degraded: true,
+          degraded_reason: degradedReason
         });
       }
 

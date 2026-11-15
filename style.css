@@ -10,6 +10,19 @@
   --text: #FFFFFF;
   --text-dim: #9AA3B5;
 
+  /* Biến màu bổ sung cho trang kết quả và bảng biểu */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(61, 130, 247, 0.4);
+  --bg-card: rgba(11, 19, 48, 0.85);
+  --bg-card-inner: rgba(255, 255, 255, 0.03);
+  --bg-badge-green: rgba(45, 190, 120, 0.15);
+  --border-badge-green: rgba(45, 190, 120, 0.3);
+  --bg-badge-blue: rgba(20, 100, 244, 0.15);
+  --border-badge-blue: rgba(20, 100, 244, 0.3);
+  --bg-caution: rgba(238, 61, 67, 0.1);
+  --border-caution: rgba(238, 61, 67, 0.3);
+  --table-border: rgba(255, 255, 255, 0.08);
+
   /* Font chữ Mulish */
   --font: 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
@@ -639,6 +652,775 @@ body {
   .quiz-summary-actions .quiz-secondary-btn,
   .quiz-summary-actions .quiz-primary-btn {
     width: 100%;
+  }
+}
+
+/* ==========================================================================
+   PHẦN KẾT QUẢ GỢI Ý XE (#result)
+   ========================================================================== */
+.result-section {
+  width: min(100% - 32px, 860px);
+  margin: 0 auto var(--space-6);
+  padding: var(--space-4) 0;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.result-section * {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Tiêu đề kết quả */
+.result-header {
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--bg-badge-blue);
+  color: var(--blue-light);
+  border: 1px solid var(--border-badge-blue);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.result-title {
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: var(--space-2);
+}
+
+.result-subtitle {
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  color: var(--text-dim);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Khối tùy chọn sạc miễn phí chung phía trên các thẻ */
+.result-cost-toggle-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  width: 100%;
+}
+
+.result-cost-toggle-note {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-align: center;
+  max-width: 680px;
+  line-height: 1.45;
+  margin: 0;
+  font-style: italic;
+}
+
+.result-cost-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--bg-card-inner);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+  min-height: 44px;
+}
+
+.result-cost-toggle-label:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-badge-blue);
+}
+
+.result-cost-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.result-cost-checkbox-box {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-hover);
+  background-color: var(--bg-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.result-cost-check-icon {
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+  color: var(--text);
+}
+
+.result-cost-checkbox:checked + .result-cost-checkbox-box {
+  background-color: var(--green);
+  border-color: var(--green);
+}
+
+.result-cost-checkbox:checked + .result-cost-checkbox-box .result-cost-check-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.result-cost-checkbox:focus-visible + .result-cost-checkbox-box {
+  outline: 2px solid var(--blue-light);
+  outline-offset: 2px;
+}
+
+.result-cost-toggle-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Lưới thẻ xe */
+.result-cars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  align-items: stretch;
+}
+
+.car-card {
+  background-color: var(--bg-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+
+.car-card:hover {
+  border-color: var(--border-hover);
+}
+
+.car-card-rank {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-3);
+}
+
+.car-card-rank.rank-1 {
+  background-color: var(--bg-badge-blue);
+  color: var(--blue-light);
+  border: 1px solid var(--border-badge-blue);
+}
+
+.car-card-rank.rank-2 {
+  background-color: var(--bg-card-inner);
+  color: var(--text-dim);
+  border: 1px solid var(--border-subtle);
+}
+
+.car-card-img-wrap {
+  width: 100%;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.car-card-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.55));
+  transition: transform 0.3s var(--ease);
+}
+
+.car-card:hover .car-card-img {
+  transform: scale(1.03);
+}
+
+.car-card-title-row {
+  margin-bottom: var(--space-3);
+}
+
+.car-card-name {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.car-card-version {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--blue-light);
+  margin-top: 2px;
+}
+
+/* Khối thông số then chốt (Key Specs) */
+.car-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  background-color: var(--bg-card-inner);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.car-spec-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.car-spec-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 2px;
+}
+
+.car-spec-value {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Khối chi phí vận hành ước tính mỗi tháng ngay dưới thông số */
+.car-cost-block {
+  background-color: var(--bg-card-inner);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.car-cost-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: var(--space-2);
+  line-height: 1.35;
+}
+
+.car-cost-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-2);
+}
+
+.car-cost-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.cost-label {
+  color: var(--text-dim);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.cost-val {
+  color: var(--text);
+  font-weight: 700;
+  text-align: right;
+  word-break: break-word;
+}
+
+.car-cost-line.is-saving .cost-label {
+  color: var(--green);
+  font-weight: 800;
+}
+
+.cost-saving-val {
+  color: var(--green);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.car-cost-notes {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cost-note-item {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+  font-style: italic;
+  margin: 0;
+}
+
+.car-cost-empty {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin: 0;
+  text-align: center;
+  padding: var(--space-2) 0;
+}
+
+/* Danh sách "Vì sao hợp bạn" */
+.car-reasons-block {
+  flex: 1;
+  margin-bottom: var(--space-3);
+}
+
+.car-reasons-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--space-2);
+}
+
+.car-reasons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.car-reasons-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.reason-check {
+  color: var(--green);
+  font-weight: 900;
+  flex-shrink: 0;
+  line-height: 1.45;
+}
+
+/* Khối "Lưu ý:" riêng (tô nổi bật nhẹ) */
+.car-caution-block {
+  margin-top: auto;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-caution);
+  border: 1px solid var(--border-caution);
+}
+
+.car-caution-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--red);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.car-caution-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.car-caution-list li {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+/* Bảng so sánh 2 xe */
+.compare-card {
+  background-color: var(--bg-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-5);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.compare-header {
+  margin-bottom: var(--space-3);
+}
+
+.compare-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.compare-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+}
+
+.compare-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--table-border);
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+  min-width: 320px;
+}
+
+.compare-table th,
+.compare-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--table-border);
+}
+
+.compare-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.compare-table th {
+  background-color: var(--bg-card-inner);
+  font-weight: 800;
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.compare-table th.col-feature {
+  width: 34%;
+}
+
+.compare-table th.col-car {
+  width: 33%;
+}
+
+.compare-table td.cell-label {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.compare-table td.cell-value {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.compare-table td.cell-value.is-longer {
+  color: var(--green);
+}
+
+.compare-notice-diff {
+  margin-top: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  background-color: var(--bg-card-inner);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border-subtle);
+  line-height: 1.4;
+}
+
+.compare-notice-diff svg {
+  flex-shrink: 0;
+  color: var(--blue-light);
+}
+
+/* Khung Lời giải thích AI */
+.ai-explain-card {
+  background-color: var(--bg-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.ai-explain-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ai-explain-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--bg-badge-blue);
+  color: var(--blue-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border-badge-blue);
+}
+
+.ai-explain-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.ai-explain-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.ai-explain-body {
+  min-height: 48px;
+}
+
+.ai-explain-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.ai-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--blue-light);
+  border-radius: 50%;
+  animation: aiSpinner 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes aiSpinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ai-explain-content {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-line;
+  margin-bottom: var(--space-3);
+}
+
+.ai-explain-meta {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.ai-explain-meta.is-fallback {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: var(--bg-card-inner);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  font-style: normal;
+}
+
+/* Khung khi KHÔNG có xe (top rỗng) */
+.no-car-card {
+  background-color: var(--bg-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.no-car-icon-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--bg-caution);
+  color: var(--red);
+  border: 1px solid var(--border-caution);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-3);
+}
+
+.no-car-title {
+  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: var(--space-3);
+}
+
+.no-car-reasons-box {
+  background-color: var(--bg-card-inner);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 auto var(--space-4);
+  max-width: 560px;
+  text-align: left;
+}
+
+.no-car-reasons-intro {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-bottom: var(--space-2);
+}
+
+.no-car-reasons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.no-car-reasons-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.no-car-bullet {
+  color: var(--red);
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.no-car-suggestion {
+  font-size: 0.95rem;
+  color: var(--blue-light);
+  font-weight: 600;
+  line-height: 1.5;
+  max-width: 540px;
+  margin: 0 auto var(--space-4);
+}
+
+.no-car-action {
+  display: flex;
+  justify-content: center;
+}
+
+/* Responsive cho phần kết quả (đặc biệt iPhone SE 375px) */
+@media (max-width: 639.98px) {
+  .result-section {
+    width: min(100% - 24px, 860px);
+    padding: var(--space-3) 0;
+  }
+
+  .result-cars-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .car-card {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .car-card-img-wrap {
+    height: 150px;
+  }
+
+  .car-specs-grid {
+    padding: var(--space-2);
+    gap: 4px;
+  }
+
+  .car-spec-value {
+    font-size: 0.85rem;
+  }
+
+  .car-cost-block {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .car-cost-line {
+    font-size: 0.84rem;
+  }
+
+  .cost-note-item {
+    font-size: 0.72rem;
+  }
+
+  .compare-card {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .compare-table th,
+  .compare-table td {
+    padding: 8px 10px;
+    font-size: 0.82rem;
+  }
+
+  .ai-explain-card {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .no-car-card {
+    padding: var(--space-4) var(--space-3);
   }
 }
 

@@ -1,6 +1,6 @@
 # Kết quả kiểm thử quy tắc chấm điểm (`scoring.js`)
 
-- **Ngày giờ chạy:** 17:07:17 11/11/2026
+- **Ngày giờ chạy:** 16:04:41 14/11/2026
 - **Tổng kết:** **Top 2: 30/30** (100%) | **Xe số 1: 30/30** (100%)
 - **Top 2 chưa đạt:** Không có
 - **Xe số 1 chưa đạt:** Không có

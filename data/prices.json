@@ -74,5 +74,10 @@
     "default_tier": 3,
     "default_price_incl_vat": 3183,
     "source": "tin EVN 04/11/2026 qua mekongasean.vn / sggp.org.vn"
+  },
+  "ice_reference": {
+    "name": "Xe xăng tham chiếu (giả định minh hoạ)",
+    "l_per_100km": 7.5,
+    "note": "Giả định minh hoạ để so sánh, KHÔNG phải số liệu của VinFast hay của hãng xe nào."
   }
 }
