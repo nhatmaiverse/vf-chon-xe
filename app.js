@@ -3,29 +3,29 @@
  * File: app.js — Điều khiển giao diện, hiển thị kết quả và gọi trợ lý AI
  */
 
-// Bảng chuyển đổi mã lý do sang câu tiếng Việt dễ hiểu
+// Bảng chuyển đổi mã lý do sang câu tiếng Việt dễ hiểu (viết hoa chữ cái đầu)
 const REASON_LABELS = {
-  du_cho: 'đủ chỗ cho số người bạn chọn',
-  trong_ngan_sach: 'nằm trong ngân sách của bạn (đã cho phép vượt tối đa 10%)',
-  range_du_x3: 'đi được hơn 3 ngày với một lần sạc theo quãng đường bạn đi mỗi ngày',
-  di_xa_on: 'hợp chuyến đi tỉnh hàng tháng',
-  di_xa_tot: 'quãng đường dài, hợp chuyến đi tỉnh hàng tuần',
-  de_do: 'nhỏ gọn, dễ đỗ xe',
-  rong_rai: 'rộng rãi cho cả nhà',
-  rong_rai_vua: 'khá rộng rãi, nhỏ hơn một chút so với nhóm xe lớn nhất',
-  tiet_kiem: 'giá thấp trong các xe phù hợp',
-  cam_giac_lai: 'thuộc nhóm SUV cỡ vừa trở lên, hợp với cảm giác lái bạn ưu tiên',
-  sac_nhanh: 'sạc nhanh DC, tiện khi không có chỗ sạc ở nhà',
-  sac_kha: 'sạc nhanh DC ở mức khá',
-  phai_sac_moi_ngay: 'với quãng đường bạn đi và không có chỗ sạc ở nhà, có thể phải sạc gần như mỗi ngày',
-  chay_tinh_kho: 'quãng đường dưới 300 km, hơi ngắn nếu bạn hay đi tỉnh',
-  thieu_du_lieu_seats: 'chưa có dữ liệu số chỗ ngồi để đánh giá số chỗ và độ rộng rãi',
-  thieu_du_lieu_price_vnd_from: 'chưa có dữ liệu giá xe để đánh giá ngân sách và mức tiết kiệm',
-  thieu_du_lieu_range_km: 'chưa có dữ liệu quãng đường để đánh giá khả năng di chuyển',
-  thieu_du_lieu_length_m: 'chưa có dữ liệu chiều dài xe để đánh giá khả năng đỗ xe và độ rộng rãi',
-  thieu_du_lieu_segment: 'chưa có dữ liệu phân khúc xe để đánh giá cảm giác lái',
-  thieu_du_lieu_dc_max_kw: 'chưa có dữ liệu công suất sạc DC tối đa để đánh giá sạc nhanh',
-  thieu_du_lieu_dc_10_70_min: 'chưa có dữ liệu thời gian sạc nhanh 10–70% để đánh giá sạc nhanh'
+  du_cho: 'Đủ chỗ cho số người bạn chọn',
+  trong_ngan_sach: 'Nằm trong ngân sách của bạn (đã cho phép vượt tối đa 10%)',
+  range_du_x3: 'Đi được hơn 3 ngày với một lần sạc theo quãng đường bạn đi mỗi ngày',
+  di_xa_on: 'Hợp chuyến đi tỉnh hàng tháng',
+  di_xa_tot: 'Quãng đường dài, hợp chuyến đi tỉnh hàng tuần',
+  de_do: 'Nhỏ gọn, dễ đỗ xe',
+  rong_rai: 'Rộng rãi cho cả nhà',
+  rong_rai_vua: 'Khá rộng rãi, nhỏ hơn một chút so với nhóm xe lớn nhất',
+  tiet_kiem: 'Giá thấp trong các xe phù hợp',
+  cam_giac_lai: 'Thuộc nhóm SUV cỡ vừa trở lên, hợp với cảm giác lái bạn ưu tiên',
+  sac_nhanh: 'Sạc nhanh DC, tiện khi không có chỗ sạc ở nhà',
+  sac_kha: 'Sạc nhanh DC ở mức khá',
+  phai_sac_moi_ngay: 'Với quãng đường bạn đi và không có chỗ sạc ở nhà, có thể phải sạc gần như mỗi ngày',
+  chay_tinh_kho: 'Quãng đường dưới 300 km, hơi ngắn nếu bạn hay đi tỉnh',
+  thieu_du_lieu_seats: 'Chưa có dữ liệu số chỗ ngồi để đánh giá số chỗ và độ rộng rãi',
+  thieu_du_lieu_price_vnd_from: 'Chưa có dữ liệu giá xe để đánh giá ngân sách và mức tiết kiệm',
+  thieu_du_lieu_range_km: 'Chưa có dữ liệu quãng đường để đánh giá khả năng di chuyển',
+  thieu_du_lieu_length_m: 'Chưa có dữ liệu chiều dài xe để đánh giá khả năng đỗ xe và độ rộng rãi',
+  thieu_du_lieu_segment: 'Chưa có dữ liệu phân khúc xe để đánh giá cảm giác lái',
+  thieu_du_lieu_dc_max_kw: 'Chưa có dữ liệu công suất sạc DC tối đa để đánh giá sạc nhanh',
+  thieu_du_lieu_dc_10_70_min: 'Chưa có dữ liệu thời gian sạc nhanh 10–70% để đánh giá sạc nhanh'
 };
 const DEGRADED_REASON_MAP = REASON_LABELS;
 
@@ -191,6 +191,19 @@ function cancelOngoingExplain() {
 }
 
 /**
+ * Chuyển đổi các ký tự đặc biệt sang thực thể HTML an toàn (& < > " ')
+ */
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
  * Làm sạch văn bản phản hồi từ AI:
  * Bỏ mọi dấu **, *, #, `, nhưng vẫn giữ nguyên dấu xuống dòng
  */
@@ -207,19 +220,73 @@ function cleanText(str) {
  * Định dạng giá tiền VNĐ thân thiện cho giao diện
  */
 function formatPriceVnd(price) {
-  if (price == null) return 'chưa có dữ liệu';
-  if (price < 1000000000) {
-    const trieu = Math.round(price / 1000000);
+  if (price == null || price === '' || price === 'NaN') return 'chưa có dữ liệu';
+  const num = Number(price);
+  if (typeof num !== 'number' || isNaN(num) || !isFinite(num)) {
+    return 'chưa có dữ liệu';
+  }
+  if (num < 1000000000) {
+    const trieu = Math.round(num / 1000000);
+    if (isNaN(trieu)) return 'chưa có dữ liệu';
     return `Từ ${trieu} triệu VNĐ`;
   }
-  const ty = price / 1000000000;
+  const ty = num / 1000000000;
+  if (isNaN(ty)) return 'chưa có dữ liệu';
   const formatted = parseFloat(ty.toFixed(2)).toString().replace('.', ',');
+  if (formatted === 'NaN') return 'chưa có dữ liệu';
   return `Từ ${formatted} tỷ VNĐ`;
 }
 
 /**
+ * Chuyển đổi định dạng ngày YYYY-MM-DD sang DD/MM/YYYY
+ */
+function formatDateVi(dateStr) {
+  if (!dateStr || typeof dateStr !== 'string') return '';
+  const trimmed = dateStr.trim();
+  if (trimmed === 'NaN' || trimmed === 'undefined' || trimmed === 'null') return '';
+  const match = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (match) {
+    const [, y, m, d] = match;
+    return `${d}/${m}/${y}`;
+  }
+  return trimmed;
+}
+
+/**
+ * Viết hoa chữ cái đầu tiên theo tiếng Việt
+ */
+function capitalizeFirstLetter(str) {
+  if (!str || typeof str !== 'string') return '';
+  return str.charAt(0).toLocaleUpperCase('vi-VN') + str.slice(1);
+}
+
+/**
+ * Định dạng số thập phân dùng dấu phẩy kiểu Việt (ví dụ 4.241 -> 4,241)
+ */
+function formatNumberVi(val) {
+  if (val == null || val === '' || val === 'NaN') {
+    return 'chưa có dữ liệu';
+  }
+  if (typeof val === 'number') {
+    if (isNaN(val)) return 'chưa có dữ liệu';
+    return String(val).replace('.', ',');
+  }
+  if (typeof val === 'string') {
+    const trimmed = val.trim();
+    if (trimmed === 'NaN' || trimmed === 'undefined' || trimmed === 'null' || trimmed === '') {
+      return 'chưa có dữ liệu';
+    }
+    if (/^-?\d+\.\d+$/.test(trimmed)) {
+      return trimmed.replace('.', ',');
+    }
+    return trimmed;
+  }
+  return val;
+}
+
+/**
  * Ánh xạ mã lý do sang câu tiếng Việt
- * Bắt đầu bằng 'thieu_du_lieu' -> 'chưa có dữ liệu để đánh giá một tiêu chí' (nếu chưa nhận ra)
+ * Bắt đầu bằng 'thieu_du_lieu' -> 'Chưa có dữ liệu để đánh giá một tiêu chí' (nếu chưa nhận ra)
  * Mã lạ -> trả về null (bỏ qua, không in mã thô)
  */
 function mapReasonCode(code) {
@@ -228,7 +295,7 @@ function mapReasonCode(code) {
     return REASON_LABELS[code];
   }
   if (code.startsWith('thieu_du_lieu')) {
-    return 'chưa có dữ liệu để đánh giá một tiêu chí';
+    return 'Chưa có dữ liệu để đánh giá một tiêu chí';
   }
   return null;
 }
@@ -239,11 +306,21 @@ const mapDegradedReason = mapReasonCode;
  * Nếu xe thiếu range_standard thì hiện "chuẩn đo chưa rõ", không giả định NEDC.
  */
 function formatCarRange(car) {
-  if (!car || car.range_km == null) return 'chưa có dữ liệu';
+  if (!car || car.range_km == null || car.range_km === '' || car.range_km === 'NaN') {
+    return 'chưa có dữ liệu';
+  }
+  const numRange = Number(car.range_km);
+  if (typeof numRange !== 'number' || isNaN(numRange)) {
+    return 'chưa có dữ liệu';
+  }
+  const formattedRange = formatNumberVi(car.range_km);
+  if (formattedRange === 'chưa có dữ liệu' || formattedRange === 'NaN') {
+    return 'chưa có dữ liệu';
+  }
   const standard = (car.range_standard && typeof car.range_standard === 'string' && car.range_standard.trim())
     ? car.range_standard.trim()
     : 'chuẩn đo chưa rõ';
-  return `${car.range_km} km (${standard})`;
+  return `${formattedRange} km (${standard})`;
 }
 
 /**
@@ -270,9 +347,10 @@ function getFreeChargingPolicyText(rawData) {
  * Dùng hàm estimateMonthlyCost từ cost.js
  */
 function buildCarCostHtml(car, prices, answers, freeCharging, isDifferentRangeStandard = false) {
+  const carIdSafe = esc(car && car.id ? car.id : 'unknown');
   if (typeof window.estimateMonthlyCost !== 'function' || !car || !prices) {
     return `
-      <div class="car-cost-block" id="cost-block-${car && car.id ? car.id : 'unknown'}">
+      <div class="car-cost-block" id="cost-block-${carIdSafe}">
         <p class="car-cost-empty">Chưa có dữ liệu giá để tính chi phí.</p>
       </div>
     `;
@@ -288,52 +366,69 @@ function buildCarCostHtml(car, prices, answers, freeCharging, isDifferentRangeSt
 
   if (!costRes || !costRes.ok) {
     return `
-      <div class="car-cost-block" id="cost-block-${car.id}">
+      <div class="car-cost-block" id="cost-block-${carIdSafe}">
         <p class="car-cost-empty">Chưa có dữ liệu giá để tính chi phí.</p>
       </div>
     `;
   }
 
-  const evCostStr = `${costRes.ev_cost_vnd.toLocaleString('vi-VN')} đ`;
-  const petrolCostStr = `${costRes.petrol_cost_vnd.toLocaleString('vi-VN')} đ`;
-  const savingCostStr = `${costRes.saving_vnd.toLocaleString('vi-VN')} đ`;
+  const formatCostVal = (val) => {
+    if (val == null || (typeof val === 'number' && isNaN(val)) || val === 'NaN') {
+      return 'chưa có dữ liệu';
+    }
+    const num = Number(val);
+    if (isNaN(num)) return 'chưa có dữ liệu';
+    return `${num.toLocaleString('vi-VN')} đ`;
+  };
+
+  const evCostStr = formatCostVal(costRes.ev_cost_vnd);
+  const petrolCostStr = formatCostVal(costRes.petrol_cost_vnd);
+  const savingCostStr = formatCostVal(costRes.saving_vnd);
 
   const note1 =
     (costRes.notes && costRes.notes[0]) ||
     'Con số là ước tính, chưa tính hao hụt khi sạc và điều kiện thực tế.';
-  const note2 =
-    (costRes.notes && costRes.notes[1]) ||
-    'Xe xăng so sánh là giả định 7,5 lít/100 km, không phải số liệu của hãng.';
+
+  const pricesData = prices || cachedPricesData;
+  const iceLiters = pricesData && pricesData.ice_reference ? pricesData.ice_reference.l_per_100km : null;
+  let note2Html = '';
+  if (iceLiters != null && !isNaN(iceLiters) && iceLiters !== '' && iceLiters !== 'NaN') {
+    const formattedIceLiters = formatNumberVi(iceLiters);
+    if (formattedIceLiters && formattedIceLiters !== 'chưa có dữ liệu' && formattedIceLiters !== 'NaN') {
+      note2Html = `<p class="cost-note-item">Xe xăng so sánh là giả định ${esc(formattedIceLiters)} lít/100 km, không phải số liệu của hãng.</p>`;
+    }
+  }
 
   const diffNoticeHtml = isDifferentRangeStandard
     ? '<p class="cost-note-item">Quãng đường của hai xe đo theo chuẩn khác nhau nên chi phí hai xe không so trực tiếp được.</p>'
     : '';
 
-  const pricesUpdated = prices && prices.updated ? prices.updated : '';
-  const priceUpdatedHtml = pricesUpdated
-    ? `<p class="cost-note-item">Giá lấy từ dữ liệu cập nhật ngày ${pricesUpdated}; vui lòng kiểm tra lại giá hiện hành.</p>`
+  const pricesUpdated = pricesData && pricesData.updated ? pricesData.updated : '';
+  const formattedPriceDate = formatDateVi(pricesUpdated);
+  const priceUpdatedHtml = formattedPriceDate
+    ? `<p class="cost-note-item">Giá lấy từ dữ liệu cập nhật ngày ${esc(formattedPriceDate)}; vui lòng kiểm tra lại giá hiện hành.</p>`
     : '';
 
   return `
-    <div class="car-cost-block" id="cost-block-${car.id}">
+    <div class="car-cost-block" id="cost-block-${carIdSafe}">
       <h4 class="car-cost-title">Chi phí vận hành ước tính mỗi tháng</h4>
       <div class="car-cost-lines">
         <div class="car-cost-line">
           <span class="cost-label">Điện:</span>
-          <span class="cost-val">${evCostStr}</span>
+          <span class="cost-val">${esc(evCostStr)}</span>
         </div>
         <div class="car-cost-line">
           <span class="cost-label">Xe xăng tham chiếu:</span>
-          <span class="cost-val">${petrolCostStr}</span>
+          <span class="cost-val">${esc(petrolCostStr)}</span>
         </div>
         <div class="car-cost-line is-saving">
           <span class="cost-label">Tiết kiệm:</span>
-          <span class="cost-val cost-saving-val">${savingCostStr}</span>
+          <span class="cost-val cost-saving-val">${esc(savingCostStr)}</span>
         </div>
       </div>
       <div class="car-cost-notes">
-        <p class="cost-note-item">${note1}</p>
-        <p class="cost-note-item">${note2}</p>
+        <p class="cost-note-item">${esc(note1)}</p>
+        ${note2Html}
         ${diffNoticeHtml}
         ${priceUpdatedHtml}
       </div>
@@ -455,7 +550,7 @@ function renderNoCarResult(container, result) {
       (text) => `
         <li>
           <span class="no-car-bullet" aria-hidden="true">•</span>
-          <span>${text}</span>
+          <span>${esc(text)}</span>
         </li>
       `
     )
@@ -563,10 +658,12 @@ function renderMatchedCarsResult(container, top, cars, answers) {
   const toggleWrapStyle = hasPrices ? '' : 'style="display: none;"';
 
   const freeChargingPolicy = getFreeChargingPolicyText(cachedCarsRawData);
+  const formattedPolicy = freeChargingPolicy ? capitalizeFirstLetter(freeChargingPolicy) : '';
   const freeChargingNoteHtml = `
     <p class="result-cost-toggle-note">
-      Giả định toàn bộ điện sạc miễn phí; điều kiện của chương trình thực tế có thể có giới hạn.${freeChargingPolicy ? `<br><span class="result-cost-toggle-policy">${freeChargingPolicy}</span>` : ''}
+      Giả định toàn bộ điện sạc miễn phí; điều kiện của chương trình thực tế có thể có giới hạn.
     </p>
+    ${formattedPolicy ? `<p class="result-cost-toggle-note result-cost-toggle-policy">${esc(formattedPolicy)}</p>` : ''}
   `;
 
   const toggleHtml = `
@@ -611,7 +708,7 @@ function renderMatchedCarsResult(container, top, cars, answers) {
           (text) => `
             <li>
               <span class="reason-check" aria-hidden="true">✓</span>
-              <span>${text}</span>
+              <span>${esc(capitalizeFirstLetter(text))}</span>
             </li>
           `
         )
@@ -630,7 +727,7 @@ function renderMatchedCarsResult(container, top, cars, answers) {
                 <span>Lưu ý</span>
               </div>
               <ul class="car-caution-list">
-                ${cautions.map((c) => `<li>${c}</li>`).join('')}
+                ${cautions.map((c) => `<li>${esc(c)}</li>`).join('')}
               </ul>
             </div>
           `
@@ -639,7 +736,9 @@ function renderMatchedCarsResult(container, top, cars, answers) {
       const rankLabel = car.rank === 1 ? 'Lựa chọn số 1' : 'Gợi ý thay thế';
       const rankClass = car.rank === 1 ? 'rank-1' : 'rank-2';
       const rangeText = formatCarRange(car);
-      const seatsText = car.seats != null ? `${car.seats} chỗ` : 'chưa có dữ liệu';
+      const seatsText = (car.seats != null && !isNaN(car.seats) && car.seats !== '' && car.seats !== 'NaN')
+        ? `${formatNumberVi(car.seats)} chỗ`
+        : 'chưa có dữ liệu';
       const priceText = formatPriceVnd(car.price_vnd_from);
 
       // Khối chi phí vận hành ước tính mỗi tháng
@@ -650,28 +749,28 @@ function renderMatchedCarsResult(container, top, cars, answers) {
           <div class="car-card-rank ${rankClass}">${rankLabel}</div>
           <div class="car-card-img-wrap">
             <img
-              src="assets/cars/${car.id}.webp"
-              alt="VinFast ${car.name}"
+              src="assets/cars/${esc(car.id)}.webp"
+              alt="VinFast ${esc(car.name)}"
               class="car-card-img"
               loading="lazy"
             />
           </div>
           <div class="car-card-title-row">
-            <h3 class="car-card-name">${car.name}</h3>
-            ${car.version ? `<span class="car-card-version">${car.version}</span>` : ''}
+            <h3 class="car-card-name">${esc(car.name)}</h3>
+            ${car.version ? `<span class="car-card-version">${esc(car.version)}</span>` : ''}
           </div>
           <div class="car-specs-grid">
             <div class="car-spec-item">
               <span class="car-spec-label">Giá từ</span>
-              <span class="car-spec-value">${priceText}</span>
+              <span class="car-spec-value">${esc(priceText)}</span>
             </div>
             <div class="car-spec-item">
               <span class="car-spec-label">Quãng đường</span>
-              <span class="car-spec-value">${rangeText}</span>
+              <span class="car-spec-value">${esc(rangeText)}</span>
             </div>
             <div class="car-spec-item">
               <span class="car-spec-label">Số chỗ</span>
-              <span class="car-spec-value">${seatsText}</span>
+              <span class="car-spec-value">${esc(seatsText)}</span>
             </div>
           </div>
           ${costHtml}
@@ -702,14 +801,20 @@ function renderMatchedCarsResult(container, top, cars, answers) {
 
     let c1Longer = false;
     let c2Longer = false;
-    if (!isDifferentRangeStandard && c1.range_km != null && c2.range_km != null) {
+    if (!isDifferentRangeStandard && c1.range_km != null && c2.range_km != null && !isNaN(c1.range_km) && !isNaN(c2.range_km)) {
       if (c1.range_km > c2.range_km) c1Longer = true;
       else if (c2.range_km > c1.range_km) c2Longer = true;
     }
 
     const valOrMissing = (val, suffix = '') => {
-      if (val === null || val === undefined || val === '') return 'chưa có dữ liệu';
-      return suffix ? `${val} ${suffix}` : `${val}`;
+      if (val === null || val === undefined || val === '' || (typeof val === 'number' && isNaN(val)) || val === 'NaN') {
+        return 'chưa có dữ liệu';
+      }
+      const formatted = formatNumberVi(val);
+      if (formatted === 'chưa có dữ liệu' || formatted === 'NaN' || formatted == null) {
+        return 'chưa có dữ liệu';
+      }
+      return suffix ? `${formatted} ${suffix}` : `${formatted}`;
     };
 
     const c1RangeStr = formatCarRange(c1);
@@ -719,52 +824,52 @@ function renderMatchedCarsResult(container, top, cars, answers) {
       <section class="compare-card" aria-label="So sánh 2 xe">
         <div class="compare-header">
           <h3 class="compare-title">So sánh trực quan giữa 2 xe</h3>
-          <p class="compare-subtitle">Đối chiếu các thông số quan trọng giữa ${c1.name} và ${c2.name}</p>
+          <p class="compare-subtitle">Đối chiếu các thông số quan trọng giữa ${esc(c1.name)} và ${esc(c2.name)}</p>
         </div>
         <div class="compare-table-wrap">
           <table class="compare-table">
             <thead>
               <tr>
                 <th scope="col" class="col-feature">Tiêu chí</th>
-                <th scope="col" class="col-car">${c1.name}</th>
-                <th scope="col" class="col-car">${c2.name}</th>
+                <th scope="col" class="col-car">${esc(c1.name)}</th>
+                <th scope="col" class="col-car">${esc(c2.name)}</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="cell-label">Giá từ</td>
-                <td class="cell-value">${formatPriceVnd(c1.price_vnd_from)}</td>
-                <td class="cell-value">${formatPriceVnd(c2.price_vnd_from)}</td>
+                <td class="cell-value">${esc(formatPriceVnd(c1.price_vnd_from))}</td>
+                <td class="cell-value">${esc(formatPriceVnd(c2.price_vnd_from))}</td>
               </tr>
               <tr>
                 <td class="cell-label">Số chỗ</td>
-                <td class="cell-value">${valOrMissing(c1.seats, 'chỗ')}</td>
-                <td class="cell-value">${valOrMissing(c2.seats, 'chỗ')}</td>
+                <td class="cell-value">${esc(valOrMissing(c1.seats, 'chỗ'))}</td>
+                <td class="cell-value">${esc(valOrMissing(c2.seats, 'chỗ'))}</td>
               </tr>
               <tr>
                 <td class="cell-label">Quãng đường</td>
-                <td class="cell-value ${c1Longer ? 'is-longer' : ''}">${c1RangeStr}</td>
-                <td class="cell-value ${c2Longer ? 'is-longer' : ''}">${c2RangeStr}</td>
+                <td class="cell-value ${c1Longer ? 'is-longer' : ''}">${esc(c1RangeStr)}</td>
+                <td class="cell-value ${c2Longer ? 'is-longer' : ''}">${esc(c2RangeStr)}</td>
               </tr>
               <tr>
                 <td class="cell-label">Dung lượng pin</td>
-                <td class="cell-value">${valOrMissing(c1.battery_kwh, 'kWh')}</td>
-                <td class="cell-value">${valOrMissing(c2.battery_kwh, 'kWh')}</td>
+                <td class="cell-value">${esc(valOrMissing(c1.battery_kwh, 'kWh'))}</td>
+                <td class="cell-value">${esc(valOrMissing(c2.battery_kwh, 'kWh'))}</td>
               </tr>
               <tr>
                 <td class="cell-label">Sạc nhanh DC 10–70%</td>
-                <td class="cell-value">${valOrMissing(c1.dc_10_70_min, 'phút')}</td>
-                <td class="cell-value">${valOrMissing(c2.dc_10_70_min, 'phút')}</td>
+                <td class="cell-value">${esc(valOrMissing(c1.dc_10_70_min, 'phút'))}</td>
+                <td class="cell-value">${esc(valOrMissing(c2.dc_10_70_min, 'phút'))}</td>
               </tr>
               <tr>
                 <td class="cell-label">Chiều dài</td>
-                <td class="cell-value">${valOrMissing(c1.length_m, 'm')}</td>
-                <td class="cell-value">${valOrMissing(c2.length_m, 'm')}</td>
+                <td class="cell-value">${esc(valOrMissing(c1.length_m, 'm'))}</td>
+                <td class="cell-value">${esc(valOrMissing(c2.length_m, 'm'))}</td>
               </tr>
               <tr>
                 <td class="cell-label">Bảo hành</td>
-                <td class="cell-value">${valOrMissing(c1.warranty)}</td>
-                <td class="cell-value">${valOrMissing(c2.warranty)}</td>
+                <td class="cell-value">${esc(valOrMissing(c1.warranty))}</td>
+                <td class="cell-value">${esc(valOrMissing(c2.warranty))}</td>
               </tr>
             </tbody>
           </table>
@@ -788,7 +893,7 @@ function renderMatchedCarsResult(container, top, cars, answers) {
   }
 
   const explainCardHtml = `
-    <section class="ai-explain-card" aria-label="Lời giải thích từ trợ lý AI">
+    <section class="ai-explain-card" aria-label="Giải thích từ thông số xe">
       <div class="ai-explain-header">
         <div class="ai-explain-icon" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -796,8 +901,8 @@ function renderMatchedCarsResult(container, top, cars, answers) {
           </svg>
         </div>
         <div>
-          <h3 class="ai-explain-title">Lời giải thích từ trợ lý AI</h3>
-          <p class="ai-explain-subtitle">Phân tích chuyên sâu từ thông số kỹ thuật xe</p>
+          <h3 class="ai-explain-title">Giải thích từ thông số xe</h3>
+          <p class="ai-explain-subtitle">Viết lại từ thông số xe được gợi ý</p>
         </div>
       </div>
       <div class="ai-explain-body">
@@ -811,7 +916,18 @@ function renderMatchedCarsResult(container, top, cars, answers) {
     </section>
   `;
 
-  container.innerHTML = headerHtml + toggleHtml + gridHtml + compareHtml + explainCardHtml;
+  // Kiểm tra hòa điểm giữa 2 xe gợi ý
+  const isTie = Boolean(
+    topCarsWithData.length === 2 &&
+    topCarsWithData[0].score != null &&
+    topCarsWithData[1].score != null &&
+    topCarsWithData[0].score === topCarsWithData[1].score
+  );
+  const tieNoteHtml = isTie
+    ? '<p class="result-tie-note">Hòa điểm, xe giá thấp hơn xếp trước.</p>'
+    : '';
+
+  container.innerHTML = headerHtml + toggleHtml + tieNoteHtml + gridHtml + compareHtml + explainCardHtml;
 
   // 6. Gắn sự kiện thay đổi cho ô tích sạc miễn phí
   const freeChargingCheckbox = container.querySelector('#free-charging-checkbox');

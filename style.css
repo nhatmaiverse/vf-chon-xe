@@ -717,7 +717,8 @@ body {
   width: 100%;
 }
 
-.result-cost-toggle-note {
+.result-cost-toggle-note,
+.result-cost-toggle-policy {
   font-size: 0.78rem;
   color: var(--text-dim);
   text-align: center;
@@ -793,6 +794,17 @@ body {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text);
+}
+
+/* Dòng chú thích khi hai xe hòa điểm */
+.result-tie-note {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto var(--space-4);
+  line-height: 1.45;
+  font-style: italic;
 }
 
 /* Lưới thẻ xe */
@@ -1369,6 +1381,11 @@ body {
   .result-section {
     width: min(100% - 24px, 860px);
     padding: var(--space-3) 0;
+  }
+
+  .result-tie-note {
+    font-size: 0.8rem;
+    margin-bottom: var(--space-3);
   }
 
   .result-cars-grid {

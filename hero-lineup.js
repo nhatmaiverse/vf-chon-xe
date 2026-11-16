@@ -79,12 +79,6 @@
       });
       root.appendChild(row);
     });
-
-    // Kiểm tra tỉ lệ: cột px_per_m phải gần như bằng nhau
-    console.table(items.map((it) => {
-      const w = it.img.getBoundingClientRect().width || it.btn.getBoundingClientRect().width;
-      return { id: it.car.id, length_m: it.car.length_m, img_width_px: Math.round(w), px_per_m: (w / it.car.length_m).toFixed(2) };
-    }));
   }
 
   function animateIn(items) {

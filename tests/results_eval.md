@@ -173,3 +173,101 @@
 - Số NGHI SO KHÁC CHUẨN: 0
 - Số câu lỗi API: 2
 
+
+## Lần chạy: 2026-11-16 15:07:34 | Model cấu hình: `gemini-3.6-flash` (đã tắt model dự phòng) | Khoảng câu: 19–25 (Q19–Q25)
+
+| id | câu hỏi | trả lời | model | nhãn | ghi chú |
+| --- | --- | --- | --- | --- | --- |
+| Q19 | VF 8 dài bao nhiêu mét? | Dựa vào dữ liệu được cung cấp, chiều dài của xe **VF 8** là **4,75 mét**. | gemini-3.6-flash | ĐẠT | - |
+| Q20 | VF 7 sạc nhanh từ 10% lên 70% mất bao lâu? | Dựa trên dữ liệu được cung cấp, thời gian sạc từ 10% lên 70% (DC 10-70%) của **VF 7** chưa có thông tin cụ thể (`null`). Bạn vui lòng kiểm tra thêm thông tin tại **vinfastauto.com** hoặc liên hệ trực tiếp **showroom** để biết thêm chi tiết. | gemini-3.6-flash | CẦN XEM | thiếu must_mention: chưa có dữ liệu |
+| Q21 | Công suất sạc nhanh tối đa của VF 9 là bao nhiêu? | Dựa trên dữ liệu được cung cấp: Dữ liệu hiện tại **không có thông tin** về công suất sạc nhanh tối đa (DC max kW) của xe **VF 9** (chỉ có thời gian sạc DC từ 10% đến 70% là 35 phút). Bạn vui lòng kiểm tra thêm thông tin tại **vinfastauto.com** hoặc trực tiếp tại các **showroom** của VinFast. | gemini-3.6-flash | CẦN XEM | thiếu must_mention: chưa có dữ liệu |
+| Q22 | Giá lăn bánh VF 6 ở Đà Nẵng là bao nhiêu? | Dựa vào dữ liệu được cung cấp, chỉ có thông tin về **giá khởi điểm bán lẻ (đã kèm pin)** của xe VF 6 (phiên bản VF 6 Eco) là **646.000.000 VNĐ**. Dữ liệu hiện tại **không có thông tin về giá lăn bánh** (bao gồm phí trước bạ, phí đăng ký biển số, phí bảo trì đường bộ...) tại Đà Nẵng hay các tỉnh thàn... | gemini-3.6-flash | ĐẠT | - |
+| Q23 | Bảo hiểm VF 5 mỗi năm khoảng bao nhiêu tiền? | Dựa trên dữ liệu được cung cấp, không có thông tin về chi phí bảo hiểm hàng năm của xe VF 5. Bạn vui lòng kiểm tra thêm thông tin tại website vinfastauto.com hoặc liên hệ trực tiếp với showroom của VinFast để được hỗ trợ. | gemini-3.6-flash | ĐẠT | - |
+| Q24 | Pin VF 3 sau 10 năm còn bao nhiêu phần trăm? | Dựa trên dữ liệu được cung cấp, không có thông tin về tỷ lệ phần trăm dung lượng pin còn lại của VF 3 sau 10 năm. Bạn vui lòng kiểm tra thêm thông tin chi tiết tại website **vinfastauto.com** hoặc liên hệ trực tiếp với **showroom** của VinFast để được hỗ trợ. | gemini-3.6-flash | ĐẠT | - |
+| Q25 | VinFast có tốt hơn Toyota không? | Dựa trên dữ liệu được cung cấp, không có thông tin để so sánh hoặc đánh giá chất lượng giữa xe VinFast và xe Toyota. Quý khách vui lòng tham khảo thêm thông tin chi tiết tại website [vinfastauto.com](https://vinfastauto.com) hoặc liên hệ trực tiếp với các showroom của VinFast để được hỗ trợ. | gemini-3.6-flash | ĐẠT | - |
+
+**Tổng kết lần chạy (2026-11-16 15:07:34):**
+- Model thực sự đã trả lời: `gemini-3.6-flash`
+- Số ĐẠT: 5
+- Số CẦN XEM: 2
+- Số số-lạ: 0
+- Số NGHI SO KHÁC CHUẨN: 0
+- Số câu lỗi API: 0
+
+**Bảng tổng (chỉ tính lần chạy gần nhất của mỗi câu — đã có 25/25 câu):**
+- Số ĐẠT: 21
+- Số CẦN XEM: 3
+- Số số-lạ: 1
+- Số NGHI SO KHÁC CHUẨN: 0
+- Số câu lỗi API: 1
+
+
+## Lần chạy: 2026-11-16 15:11:39 | Model cấu hình: `gemini-3.6-flash` (đã tắt model dự phòng) | Khoảng câu: --only Q04,Q18
+
+| id | câu hỏi | trả lời | model | nhãn | ghi chú |
+| --- | --- | --- | --- | --- | --- |
+| Q04 | VF 8 hay VF 9 đi xa hơn? | Theo dữ liệu: * **VF 8 (phiên bản Eco):** Quãng đường di chuyển là **635 km** (đo theo chuẩn **NEDC**). * **VF 9 (phiên bản Eco):** Quãng đường di chuyển là **626 km** (đo theo chuẩn **WLTP**). **Lưu ý:** VF 9 đo theo chuẩn WLTP, còn VF 8 đo theo chuẩn NEDC. Do chuẩn WLTP thường cho kết quả thấp hơn NEDC nên hai thông số này không so sánh trực tiếp với nhau. | gemini-3.6-flash | CẦN XEM | NGHI SO KHÁC CHUẨN |
+| Q18 | Mỗi ngày đi 70 km thì VF 3 bao nhiêu ngày phải sạc một lần? | Dựa trên dữ liệu: * Mẫu xe **VF 3** (phiên bản VF 3 Eco) có quãng đường di chuyển sau một lần sạc đầy là **215 km** (theo chuẩn NEDC). Nếu mỗi ngày bạn di chuyển **70 km**, theo lý thuyết xe sẽ chạy được khoảng **3 ngày** thì cần phải sạc lại (215 km / 70 km/ngày ≈ 3,07 ngày). *Lưu ý: Quãng đường di chuyển thực tế có thể thay đổi tùy thuộc vào điều kiện vận hành, thời tiết và thói quen lái xe. Để biết thêm chi tiết, bạn có thể kiểm tra tại vinfastauto.com hoặc đến trực tiếp showroom.* | gemini-3.6-flash | CẦN XEM | số lạ: 3,07 |
+
+**Tổng kết lần chạy (2026-11-16 15:11:39):**
+- Model thực sự đã trả lời: `gemini-3.6-flash`
+- Số ĐẠT: 0
+- Số CẦN XEM: 2
+- Số số-lạ: 1
+- Số NGHI SO KHÁC CHUẨN: 1
+- Số câu lỗi API: 0
+
+**Bảng tổng (chỉ tính lần chạy gần nhất của mỗi câu — đã có 25/25 câu):**
+- Số ĐẠT: 21
+- Số CẦN XEM: 4
+- Số số-lạ: 1
+- Số NGHI SO KHÁC CHUẨN: 1
+- Số câu lỗi API: 0
+
+
+## Lần chạy: 2026-11-16 17:45:20 | Model cấu hình: `gemini-3.6-flash` (đã tắt model dự phòng) | Khoảng câu: --only Q04,Q13,Q18,Q20
+
+| id | câu hỏi | trả lời | model | nhãn | ghi chú |
+| --- | --- | --- | --- | --- | --- |
+| Q04 | VF 8 hay VF 9 đi xa hơn? | (LỖI HTTP 502: Hệ thống AI phản hồi quá 10 giây. Vui lòng thử lại sau.) | gemini-3.6-flash | LỖI GỌI API (không tính điểm) | lỗi gọi API (HTTP 502) |
+| Q13 | VF 8 bảo hành bao lâu? | (LỖI HTTP 502: Hệ thống AI phản hồi quá 10 giây. Vui lòng thử lại sau.) | gemini-3.6-flash | LỖI GỌI API (không tính điểm) | lỗi gọi API (HTTP 502) |
+| Q18 | Mỗi ngày đi 70 km thì VF 3 bao nhiêu ngày phải sạc một lần? | (LỖI HTTP 502: Hệ thống AI phản hồi quá 10 giây. Vui lòng thử lại sau.) | gemini-3.6-flash | LỖI GỌI API (không tính điểm) | lỗi gọi API (HTTP 502) |
+| Q20 | VF 7 sạc nhanh từ 10% lên 70% mất bao lâu? | (LỖI HTTP 502: Hệ thống AI phản hồi quá 10 giây. Vui lòng thử lại sau.) | gemini-3.6-flash | LỖI GỌI API (không tính điểm) | lỗi gọi API (HTTP 502) |
+
+**Tổng kết lần chạy (2026-11-16 17:45:20):**
+- Model thực sự đã trả lời: `gemini-3.6-flash`
+- Số ĐẠT: 0
+- Số CẦN XEM: 0
+- Số số-lạ: 0
+- Số NGHI SO KHÁC CHUẨN: 0
+- Số câu lỗi API: 4
+
+**Bảng tổng (chỉ tính lần chạy gần nhất của mỗi câu — đã có 25/25 câu):**
+- Số ĐẠT: 20
+- Số CẦN XEM: 1
+- Số số-lạ: 0
+- Số NGHI SO KHÁC CHUẨN: 0
+- Số câu lỗi API: 4
+
+
+## Lần chạy: 2026-11-16 18:14:35 | Model cấu hình: `gemini-3.6-flash` (đã tắt model dự phòng) | Khoảng câu: --only Q20
+
+| id | câu hỏi | trả lời | model | nhãn | ghi chú |
+| --- | --- | --- | --- | --- | --- |
+| Q20 | VF 7 sạc nhanh từ 10% lên 70% mất bao lâu? | (LỖI HTTP 502: Hệ thống AI phản hồi quá 10 giây. Vui lòng thử lại sau.) | gemini-3.6-flash | LỖI GỌI API (không tính điểm) | lỗi gọi API (HTTP 502) |
+
+**Tổng kết lần chạy (2026-11-16 18:14:35):**
+- Model thực sự đã trả lời: `gemini-3.6-flash`
+- Số ĐẠT: 0
+- Số CẦN XEM: 0
+- Số số-lạ: 0
+- Số NGHI SO KHÁC CHUẨN: 0
+- Số câu lỗi API: 1
+
+**Bảng tổng (chỉ tính lần chạy gần nhất của mỗi câu — đã có 25/25 câu):**
+- Số ĐẠT: 20
+- Số CẦN XEM: 1
+- Số số-lạ: 0
+- Số NGHI SO KHÁC CHUẨN: 0
+- Số câu lỗi API: 4
+

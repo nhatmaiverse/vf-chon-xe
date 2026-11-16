@@ -406,10 +406,7 @@
       priority: answers.priority
     };
 
-    // 2. In ra console để kiểm tra
-    console.log('Quiz answers:', window.quizAnswers);
-
-    // 3. Bắn CustomEvent 'quiz:done'
+    // 2. Bắn CustomEvent 'quiz:done'
     document.dispatchEvent(
       new CustomEvent('quiz:done', {
         detail: window.quizAnswers
@@ -493,7 +490,6 @@
    * 4. Ẩn thẻ tóm tắt, quay về câu 1, thanh tiến trình về "Câu 1/6".
    * 5. Cuộn mượt lên đầu khung #quiz.
    * 6. Phát sự kiện: document.dispatchEvent(new CustomEvent('quiz:reset')).
-   * 7. In ra Console: console.log('Quiz reset', window.quizAnswers).
    */
   function resetQuiz() {
     // 1. Xoá sạch đáp án: window.quizAnswers = {} (object rỗng)
@@ -526,9 +522,6 @@
 
     // 6. Phát sự kiện: document.dispatchEvent(new CustomEvent('quiz:reset'))
     document.dispatchEvent(new CustomEvent('quiz:reset'));
-
-    // 7. In ra Console: console.log('Quiz reset', window.quizAnswers)
-    console.log('Quiz reset', window.quizAnswers);
   }
 
   // Cho phép gọi reset từ bên ngoài nếu cần
