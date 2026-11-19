@@ -2,8 +2,8 @@
 
 **Trợ lý giúp người mua xe điện lần đầu chọn mẫu VinFast theo nhu cầu thật. Code chọn xe, AI chỉ giải thích, và độ chính xác được đo bằng bộ kiểm thử.**
 
-- Demo: `[DÁN LINK VERCEL]`
-- Video 60–90 giây: `[DÁN LINK VIDEO]`
+- Demo: https://vf-chon-xe.vercel.app
+- Video demo (khoảng 1,5 phút): https://youtu.be/0Pi-xBnoqZE · cảnh minh hoạ trong video tạo bằng Google Flow (Veo), có gắn nhãn "Cảnh minh hoạ do AI tạo"
 - Tác giả: Phạm Hồng Mai (Nhật Mai) · Dự án cá nhân cho hồ sơ chương trình AI Thực Chiến, làm trong 2 tuần (6–19/11/2026)
 
 > Dự án cá nhân, phi thương mại, không phải trang chính thức của VinFast. Thông số tra trên vinfastauto.com ngày 8/11/2026, vui lòng kiểm tra lại trước khi mua.
@@ -66,7 +66,7 @@ Tôi không tiếp cận được người dùng thật trong hai tuần, nên �
 
 Hai điều cần nói thật về bảng này:
 
-- **28/30 ban đầu là điểm dễ.** Khi một AI khác (Claude Code) soát lại, nó chỉ ra rằng nếu chỉ tính xe xếp hạng 1 thì chỉ đạt 25/30. Tôi thêm thước đo chặt hơn và báo cả hai con số.
+- **28/30 ban đầu là điểm dễ.** Khi một AI khác (Claude) soát lại, nó chỉ ra rằng nếu chỉ tính xe xếp hạng 1 thì chỉ đạt 25/30. Tôi thêm thước đo chặt hơn và báo cả hai con số.
 - **Bốn điểm cuối đến từ việc sửa đáp án, không phải sửa luật.** Ví dụ ở S14, S24, S28 (gia đình 3 người, đi 15 km mỗi ngày, hiếm khi đi tỉnh), đáp án cũ chấp nhận VF 3 nhưng không chấp nhận VF 2, dù hai xe cùng 4 chỗ và VF 2 rẻ hơn 97 triệu đồng. Muốn ép VF 5 lên đầu thì phải thêm luật "xe chật", mà dữ liệu không có dung tích cốp, nên tôi không thêm.
 
 ![Vòng 6: 30/30 cho cả hai thước đo](docs/screens/ngay5-17-kiemtra-vong6-none-reasons-va-plan-30-va-30.jpg)
@@ -107,8 +107,7 @@ Ví dụ về "thêm diễn giải": dữ liệu ghi bảo hành VF 8 là "10 n�
 | Công cụ | Vai trò |
 |---|---|
 | Antigravity (Gemini Flash) | Viết phần lớn code theo hướng dẫn từng ngày |
-| Claude Code | Soát chéo code quan trọng, chỉ đọc và chỉ ra lỗi; tôi quyết định sửa gì |
-| Claude (chat) | Lập kế hoạch, viết hướng dẫn từng bước, nhật ký, soát bảo mật |
+| Claude | Soát chéo code quan trọng (chỉ đọc và chỉ ra lỗi, tôi quyết định sửa gì); lập kế hoạch, viết hướng dẫn từng bước, nhật ký, soát bảo mật |
 | Gemini Flash qua API | Chạy trong ứng dụng để viết lời giải thích |
 | Tôi | Tra và nhập dữ liệu 7 xe, viết 30 tình huống và 25 câu hỏi, thiết kế giao diện, xử lý ảnh xe, chạy thử, quyết định |
 
@@ -143,6 +142,7 @@ Hai AI khác hãng kiểm tra nhau là có chủ ý: chính lần soát chéo đ
 - Chính sách miễn phí sạc chỉ có nguồn báo chí nên công tắc mặc định tắt.
 - Gói AI miễn phí: khoảng 20 lượt mỗi ngày, đôi lúc quá tải. Ai cũng gọi được `/api/ask`; bộ giới hạn 10 lượt/phút nằm trong bộ nhớ của hàm nên không chắc chắn trên môi trường serverless. Khi hết lượt, người dùng thấy bản giải thích tự động.
 - Chưa có ô hỏi đáp trên giao diện; chế độ hỏi đáp mới dùng trong bộ đo.
+- Prompt hỏi đáp còn thiếu vài luật: luôn ghi chuẩn đo NEDC/WLTP, xử lý ô dữ liệu trống (để không lộ chữ `null` như Q20), thống nhất định dạng số. Đã soạn bản bổ sung nhưng chưa đo lại được vì Gemini quá tải, nên chưa đưa lên; bản đang chạy là bản đã đo ở mục 4.2.
 
 **Nếu có thêm thời gian**
 
